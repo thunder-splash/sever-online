@@ -21,10 +21,11 @@
   <main>
     <section class="intro">
       <p class="kicker">Andromeda API · САМО</p>
-      <h1>Свой поиск туров<br />без выгрузки прайсов</h1>
+      <h1>Поиск → пакет → бронь<br />в одном контуре</h1>
       <p class="lead">
-        Витрина агентства ходит в живые базы туроператоров через Андромеду:
-        актуальная цена на экране, бронь сразу в системе ТО.
+        Ниже — рабочая воронка агентской витрины: фильтры, выбор рейса,
+        актуализация цены, туристы и статус заявки. Данные демонстрационные,
+        логика — как в интеграции с Андромедой.
       </p>
     </section>
 
@@ -32,66 +33,91 @@
       <div class="product-shell">
         <div class="product-chrome">
           <span class="dot"></span><span class="dot"></span><span class="dot"></span>
-          <span class="url">sever.travel / search</span>
+          <span class="url" id="chromeUrl">sever.travel / search</span>
         </div>
 
-        <div class="app">
+        <div class="app" id="app">
           <div class="app-head">
             <div class="app-logo">Север<span>.</span></div>
             <div class="app-links">
-              <span>Туры</span>
-              <span>Отели</span>
-              <span>Поддержка</span>
+              <button type="button" class="text-btn" data-goto="search">Туры</button>
+              <button type="button" class="text-btn" id="ordersBtn" hidden>Мои заявки</button>
             </div>
           </div>
 
-          <form class="finder" id="searchForm">
-            <label class="field">
-              <span>Откуда</span>
-              <select name="from" required>
-                <option value="1">Москва</option>
-                <option value="5">Санкт-Петербург</option>
-                <option value="9">Казань</option>
-                <option value="12">Екатеринбург</option>
-              </select>
-            </label>
-            <label class="field">
-              <span>Куда</span>
-              <select name="to" required>
-                <option value="15">Турция</option>
-                <option value="23">Египет</option>
-                <option value="41">ОАЭ</option>
-                <option value="58">Таиланд</option>
-              </select>
-            </label>
-            <label class="field">
-              <span>Вылет</span>
-              <input type="date" name="dateFrom" required />
-            </label>
-            <label class="field slim">
-              <span>Ночей</span>
-              <select name="nights">
-                <option>7</option>
-                <option selected>10</option>
-                <option>14</option>
-              </select>
-            </label>
-            <label class="field slim">
-              <span>Туристы</span>
-              <select name="adults">
-                <option value="2" selected>2 взр.</option>
-                <option value="1">1 взр.</option>
-                <option value="3">3 взр.</option>
-              </select>
-            </label>
-            <button type="submit" class="go">Найти</button>
-          </form>
+          <div id="view-search">
+            <form class="finder" id="searchForm">
+              <label class="field">
+                <span>Откуда</span>
+                <select name="from" required>
+                  <option value="1">Москва</option>
+                  <option value="5">Санкт-Петербург</option>
+                  <option value="9">Казань</option>
+                  <option value="12">Екатеринбург</option>
+                </select>
+              </label>
+              <label class="field">
+                <span>Куда</span>
+                <select name="to" required>
+                  <option value="15">Турция</option>
+                  <option value="23">Египет</option>
+                  <option value="41">ОАЭ</option>
+                  <option value="58">Таиланд</option>
+                </select>
+              </label>
+              <label class="field">
+                <span>Вылет</span>
+                <input type="date" name="dateFrom" required />
+              </label>
+              <label class="field slim">
+                <span>Ночей</span>
+                <select name="nights">
+                  <option>7</option>
+                  <option selected>10</option>
+                  <option>14</option>
+                </select>
+              </label>
+              <label class="field slim">
+                <span>Туристы</span>
+                <select name="adults">
+                  <option value="2" selected>2 взр.</option>
+                  <option value="1">1 взр.</option>
+                  <option value="3">3 взр.</option>
+                </select>
+              </label>
+              <button type="submit" class="go">Найти</button>
+            </form>
 
-          <div class="results-head" id="resultsHead" hidden>
-            <h2 id="boardTitle">Предложения</h2>
-            <p id="boardMeta"></p>
+            <div class="toolbar" id="toolbar" hidden>
+              <div class="filters">
+                <label>Питание
+                  <select id="filterMeal">
+                    <option value="all">любое</option>
+                    <option value="AI">AI</option>
+                    <option value="UAI">UAI</option>
+                    <option value="BB">BB</option>
+                    <option value="HB">HB</option>
+                  </select>
+                </label>
+                <label>Сортировка
+                  <select id="filterSort">
+                    <option value="price">дешевле</option>
+                    <option value="price-desc">дороже</option>
+                    <option value="stars">звёзды</option>
+                  </select>
+                </label>
+              </div>
+              <div class="toolbar-meta">
+                <strong id="boardTitle">Предложения</strong>
+                <span id="boardMeta"></span>
+              </div>
+            </div>
+            <div class="list" id="results" aria-live="polite"></div>
           </div>
-          <div class="list" id="results" aria-live="polite"></div>
+
+          <div id="view-detail" class="panel" hidden></div>
+          <div id="view-book" class="panel" hidden></div>
+          <div id="view-order" class="panel" hidden></div>
         </div>
       </div>
     </section>
@@ -99,35 +125,34 @@
     <section id="stack" class="stack">
       <div class="stack-grid">
         <div>
-          <h2>Что под капотом</h2>
+          <h2>Контур интеграции</h2>
           <p>
-            Фронт не знает ключей агента. Запрос уходит в наш прокси,
-            тот подписывает вызов Andromeda и нормализует выдачу разных ТО
-            в один формат карточки.
+            На проде ключи и подпись живут на прокси. Фронт получает
+            нормализованный JSON: поиск, состав пакета, рейсы, бронь, статусы.
           </p>
         </div>
         <ul class="tech">
           <li>
             <strong>Поиск</strong>
-            <span><code>GET_PRICE_FOR_AGENT</code> · STATEINC / TOWNFROMINC из справочников</span>
+            <span><code>GET_PRICE_FOR_AGENT</code> · INC из справочников</span>
           </li>
           <li>
-            <strong>Пакет</strong>
-            <span>перелёт, питание, допуслуги, пересчёт перед бронью</span>
+            <strong>Пакет / рейсы</strong>
+            <span>состав услуг · варианты перелёта · пересчёт цены</span>
           </li>
           <li>
             <strong>Бронь</strong>
-            <span>заявка в базе туроператора · статусы и документы по API</span>
+            <span>туристы + документы → заявка в базе ТО</span>
           </li>
           <li>
-            <strong>Стек</strong>
-            <span>Next.js · Node proxy · Andromeda API</span>
+            <strong>После брони</strong>
+            <span>статусы заявки · пакет документов</span>
           </li>
         </ul>
       </div>
 
       <details class="ops">
-        <summary>Пример запроса (для разработчиков)</summary>
+        <summary>Пример запроса поиска</summary>
         <pre id="sampleTrace"></pre>
       </details>
     </section>
@@ -135,7 +160,7 @@
 
   <footer class="foot">
     <span>Север · поиск туров</span>
-    <span>данные в выдаче — демонстрационные</span>
+    <span>демо-данные · без боевого API</span>
   </footer>
 
   <script src="app.js"></script>
