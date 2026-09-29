@@ -502,6 +502,11 @@ nav a:hover {
   margin: 1.2rem 0 0.85rem;
 }
 
+.toolbar-meta {
+  display: grid;
+  gap: 0.15rem;
+}
+
 .toolbar-meta strong {
   font-family: var(--display);
   font-size: 1.15rem;
