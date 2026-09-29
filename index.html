@@ -23,9 +23,8 @@
       <p class="kicker">Andromeda API · САМО</p>
       <h1>Поиск → пакет → бронь<br />в одном контуре</h1>
       <p class="lead">
-        Ниже — рабочая воронка агентской витрины: фильтры, выбор рейса,
-        актуализация цены, туристы и статус заявки. Данные демонстрационные,
-        логика — как в интеграции с Андромедой.
+        Витрина + кабинет менеджера. Начни печатать город или курорт —
+        дальше фильтры, рейсы, актуализация цены и заявка со статусом.
       </p>
     </section>
 
@@ -40,72 +39,63 @@
           <div class="app-head">
             <div class="app-logo">Север<span>.</span></div>
             <div class="app-links">
-              <button type="button" class="text-btn" data-goto="search">Туры</button>
-              <button type="button" class="text-btn" id="ordersBtn" hidden>Мои заявки</button>
+              <button type="button" class="text-btn" id="navSearch">Туры</button>
+              <button type="button" class="text-btn" id="navDesk">Кабинет</button>
             </div>
           </div>
 
           <div id="view-search">
-            <form class="finder" id="searchForm">
-              <label class="field">
+            <form class="finder" id="searchForm" autocomplete="off">
+              <div class="field ac" data-ac="from">
                 <span>Откуда</span>
-                <select name="from" required>
-                  <option value="1">Москва</option>
-                  <option value="5">Санкт-Петербург</option>
-                  <option value="9">Казань</option>
-                  <option value="12">Екатеринбург</option>
-                </select>
-              </label>
-              <label class="field">
+                <input id="fromInput" type="text" placeholder="Город вылета" required />
+                <input type="hidden" name="from" id="fromId" />
+                <ul class="ac-list" id="fromList" hidden></ul>
+              </div>
+              <div class="field ac" data-ac="to">
                 <span>Куда</span>
-                <select name="to" required>
-                  <option value="15">Турция</option>
-                  <option value="23">Египет</option>
-                  <option value="41">ОАЭ</option>
-                  <option value="58">Таиланд</option>
-                </select>
-              </label>
+                <input id="toInput" type="text" placeholder="Страна, курорт или отель" required />
+                <input type="hidden" name="to" id="toId" />
+                <input type="hidden" name="hotelHint" id="hotelHint" />
+                <ul class="ac-list" id="toList" hidden></ul>
+              </div>
               <label class="field">
                 <span>Вылет</span>
                 <input type="date" name="dateFrom" required />
               </label>
-              <label class="field slim">
+              <div class="field slim stepper-field">
                 <span>Ночей</span>
-                <select name="nights">
-                  <option>7</option>
-                  <option selected>10</option>
-                  <option>14</option>
-                </select>
-              </label>
-              <label class="field slim">
+                <div class="stepper">
+                  <button type="button" data-step="nights" data-dir="-1">−</button>
+                  <input name="nights" id="nightsVal" value="10" readonly />
+                  <button type="button" data-step="nights" data-dir="1">+</button>
+                </div>
+              </div>
+              <div class="field slim stepper-field">
                 <span>Туристы</span>
-                <select name="adults">
-                  <option value="2" selected>2 взр.</option>
-                  <option value="1">1 взр.</option>
-                  <option value="3">3 взр.</option>
-                </select>
-              </label>
+                <div class="stepper">
+                  <button type="button" data-step="adults" data-dir="-1">−</button>
+                  <input name="adults" id="adultsVal" value="2" readonly />
+                  <button type="button" data-step="adults" data-dir="1">+</button>
+                </div>
+              </div>
               <button type="submit" class="go">Найти</button>
             </form>
+            <p class="suggest-row" id="suggestRow"></p>
 
             <div class="toolbar" id="toolbar" hidden>
-              <div class="filters">
-                <label>Питание
-                  <select id="filterMeal">
-                    <option value="all">любое</option>
-                    <option value="AI">AI</option>
-                    <option value="UAI">UAI</option>
-                    <option value="BB">BB</option>
-                    <option value="HB">HB</option>
-                  </select>
-                </label>
-                <label>Сортировка
-                  <select id="filterSort">
-                    <option value="price">дешевле</option>
-                    <option value="price-desc">дороже</option>
-                    <option value="stars">звёзды</option>
-                  </select>
-                </label>
+              <div class="chip-row" id="mealChips">
+                <button type="button" class="chip-btn is-on" data-meal="all">Все</button>
+                <button type="button" class="chip-btn" data-meal="AI">AI</button>
+                <button type="button" class="chip-btn" data-meal="UAI">UAI</button>
+                <button type="button" class="chip-btn" data-meal="BB">BB</button>
+                <button type="button" class="chip-btn" data-meal="HB">HB</button>
+              </div>
+              <div class="chip-row" id="sortChips">
+                <button type="button" class="chip-btn is-on" data-sort="price">Дешевле</button>
+                <button type="button" class="chip-btn" data-sort="price-desc">Дороже</button>
+                <button type="button" class="chip-btn" data-sort="stars">Звёзды</button>
+                <button type="button" class="chip-btn" data-sort="ops">По ТО</button>
               </div>
               <div class="toolbar-meta">
                 <strong id="boardTitle">Предложения</strong>
@@ -118,6 +108,7 @@
           <div id="view-detail" class="panel" hidden></div>
           <div id="view-book" class="panel" hidden></div>
           <div id="view-order" class="panel" hidden></div>
+          <div id="view-desk" class="panel" hidden></div>
         </div>
       </div>
     </section>
@@ -127,30 +118,17 @@
         <div>
           <h2>Контур интеграции</h2>
           <p>
-            На проде ключи и подпись живут на прокси. Фронт получает
-            нормализованный JSON: поиск, состав пакета, рейсы, бронь, статусы.
+            На проде ключи на прокси. Здесь — полная продуктовая воронка
+            на демо-данных: от typeahead-справочников до статуса заявки.
           </p>
         </div>
         <ul class="tech">
-          <li>
-            <strong>Поиск</strong>
-            <span><code>GET_PRICE_FOR_AGENT</code> · INC из справочников</span>
-          </li>
-          <li>
-            <strong>Пакет / рейсы</strong>
-            <span>состав услуг · варианты перелёта · пересчёт цены</span>
-          </li>
-          <li>
-            <strong>Бронь</strong>
-            <span>туристы + документы → заявка в базе ТО</span>
-          </li>
-          <li>
-            <strong>После брони</strong>
-            <span>статусы заявки · пакет документов</span>
-          </li>
+          <li><strong>Справочники</strong><span>города / страны / курорты / отели как INC</span></li>
+          <li><strong>Поиск</strong><span><code>GET_PRICE_FOR_AGENT</code> → нормализованная выдача</span></li>
+          <li><strong>Пакет</strong><span>рейсы · допуслуги · актуализация цены</span></li>
+          <li><strong>Заявка</strong><span>бронь → статус ТО → документы · кабинет</span></li>
         </ul>
       </div>
-
       <details class="ops">
         <summary>Пример запроса поиска</summary>
         <pre id="sampleTrace"></pre>
