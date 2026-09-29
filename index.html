@@ -84,24 +84,37 @@
             <p class="suggest-row" id="suggestRow"></p>
 
             <div class="toolbar" id="toolbar" hidden>
-              <div class="chip-row" id="mealChips">
-                <button type="button" class="chip-btn is-on" data-meal="all">Все</button>
-                <button type="button" class="chip-btn" data-meal="AI">AI</button>
-                <button type="button" class="chip-btn" data-meal="UAI">UAI</button>
-                <button type="button" class="chip-btn" data-meal="BB">BB</button>
-                <button type="button" class="chip-btn" data-meal="HB">HB</button>
+              <div class="toolbar-top">
+                <div class="toolbar-meta">
+                  <strong id="boardTitle">Предложения</strong>
+                  <span id="boardMeta"></span>
+                </div>
+                <div class="toolbar-toggles" id="sortChips">
+                  <button type="button" class="toggle is-on" data-sort="group">По курортам</button>
+                  <button type="button" class="toggle" data-sort="pp">За человека</button>
+                </div>
               </div>
-              <div class="chip-row" id="sortChips">
-                <button type="button" class="chip-btn is-on" data-sort="price">Дешевле</button>
-                <button type="button" class="chip-btn" data-sort="price-desc">Дороже</button>
-                <button type="button" class="chip-btn" data-sort="rating">Рейтинг</button>
-                <button type="button" class="chip-btn" data-sort="ops">По ТО</button>
-                <button type="button" class="chip-btn is-on" data-sort="group">По курортам</button>
-                <button type="button" class="chip-btn" data-sort="pp">За человека</button>
-              </div>
-              <div class="toolbar-meta">
-                <strong id="boardTitle">Предложения</strong>
-                <span id="boardMeta"></span>
+
+              <div class="toolbar-controls">
+                <div class="control">
+                  <span class="control-label">Питание</span>
+                  <div class="seg" id="mealChips" role="group">
+                    <button type="button" class="seg-btn is-on" data-meal="all">Все</button>
+                    <button type="button" class="seg-btn" data-meal="AI">AI</button>
+                    <button type="button" class="seg-btn" data-meal="UAI">UAI</button>
+                    <button type="button" class="seg-btn" data-meal="BB">BB</button>
+                    <button type="button" class="seg-btn" data-meal="HB">HB</button>
+                  </div>
+                </div>
+                <div class="control">
+                  <span class="control-label">Сортировка</span>
+                  <div class="tabs" id="sortTabs" role="group">
+                    <button type="button" class="tab is-on" data-sort="price">Дешевле</button>
+                    <button type="button" class="tab" data-sort="price-desc">Дороже</button>
+                    <button type="button" class="tab" data-sort="rating">Рейтинг</button>
+                    <button type="button" class="tab" data-sort="ops">По ТО</button>
+                  </div>
+                </div>
               </div>
             </div>
             <div class="list" id="results" aria-live="polite"></div>

@@ -931,7 +931,7 @@ document.getElementById("mealChips").addEventListener("click", (e) => {
   const btn = e.target.closest("[data-meal]");
   if (!btn) return;
   state.meal = btn.dataset.meal;
-  document.querySelectorAll("#mealChips .chip-btn").forEach((b) => b.classList.toggle("is-on", b === btn));
+  document.querySelectorAll("#mealChips .seg-btn").forEach((b) => b.classList.toggle("is-on", b === btn));
   if (state.results.length) renderResults();
 });
 
@@ -948,17 +948,14 @@ document.getElementById("sortChips").addEventListener("click", (e) => {
     state.perPerson = !state.perPerson;
     btn.classList.toggle("is-on", state.perPerson);
     if (state.results.length) renderResults();
-    return;
   }
+});
+
+document.getElementById("sortTabs").addEventListener("click", (e) => {
+  const btn = e.target.closest("[data-sort]");
+  if (!btn) return;
   state.sort = btn.dataset.sort;
-  document.querySelectorAll("#sortChips .chip-btn[data-sort]:not([data-sort=group]):not([data-sort=pp])").forEach((b) => {
-    if (b.dataset.sort === "group" || b.dataset.sort === "pp") return;
-    b.classList.toggle("is-on", b === btn);
-  });
-  document.querySelectorAll('#sortChips .chip-btn').forEach((b) => {
-    if (b.dataset.sort === "group" || b.dataset.sort === "pp") return;
-    b.classList.toggle("is-on", b.dataset.sort === state.sort);
-  });
+  document.querySelectorAll("#sortTabs .tab").forEach((b) => b.classList.toggle("is-on", b === btn));
   if (state.results.length) renderResults();
 });
 
