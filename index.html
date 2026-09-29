@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Кейс · Andromeda API × САМО-Тур</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="noise" aria-hidden="true"></div>
+
+  <header class="top">
+    <a class="logo" href="#top">Pants of Fortune</a>
+    <nav>
+      <a href="#case">Кейс</a>
+      <a href="#flow">Схема</a>
+      <a href="#demo">Демо</a>
+    </nav>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <p class="eyebrow">Кейс · САМО-экосистема</p>
+      <h1>Онлайн-поиск и бронирование туров<br /><em>через Andromeda API</em></h1>
+      <p class="lede">
+        B2C-витрина турагентства: живой поиск по базам 70+ туроператоров,
+        актуализация цены и бронь напрямую в базу ТО.
+      </p>
+      <div class="hero-cta">
+        <a class="btn primary" href="#demo">Смотреть демо</a>
+        <a class="btn ghost" href="#case">Разбор кейса</a>
+      </div>
+      <div class="hero-visual" aria-hidden="true">
+        <div class="plane"></div>
+        <div class="horizon"></div>
+      </div>
+    </section>
+
+    <section id="case" class="case">
+      <div class="case-grid">
+        <aside>
+          <h2>Задача</h2>
+          <p>
+            Агентству нужен был свой сайт с поиском пакетных туров,
+            без выгрузки прайсов и без устаревших цен. Источник правды —
+            базы туроператоров через Андромеду.
+          </p>
+          <dl class="meta">
+            <div><dt>Стек</dt><dd>Next.js · Node proxy · Andromeda API</dd></div>
+            <div><dt>Роль</dt><dd>Frontend + интеграция API</dd></div>
+            <div><dt>Срок</dt><dd>~3 недели до продакшена</dd></div>
+            <div><dt>Контур</dt><dd>B2C + кабинет менеджера</dd></div>
+          </dl>
+        </aside>
+        <div class="case-body">
+          <h3>Что сделано</h3>
+          <ul class="bullets">
+            <li>
+              <strong>Поиск</strong> — форма → <code>GET_PRICE_FOR_AGENT</code> /
+              searchtour: страна, город вылета, даты, ночи, питание, звёздность.
+            </li>
+            <li>
+              <strong>Карточка тура</strong> — состав пакета, перелёты, допуслуги
+              (виза / трансфер / экскурсия), пересчёт цены.
+            </li>
+            <li>
+              <strong>Бронирование</strong> — туристы + документы → заявка уходит
+              в базу туроператора; статусы и документы тянутся через API.
+            </li>
+            <li>
+              <strong>Прокси-слой</strong> — ключи и подпись запросов на бэке,
+              кэш справочников, нормализация ответов разных ТО в единый UI.
+            </li>
+          </ul>
+
+          <h3>Результат</h3>
+          <div class="stats">
+            <div class="stat">
+              <span class="num">~2с</span>
+              <span class="label">средний ответ поиска</span>
+            </div>
+            <div class="stat">
+              <span class="num">70+</span>
+              <span class="label">туроператоров в выдаче</span>
+            </div>
+            <div class="stat">
+              <span class="num">0</span>
+              <span class="label">ручных выгрузок прайса</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="flow" class="flow">
+      <h2>Как это работает</h2>
+      <p class="section-lede">Цены не копируются в локальную БД — запрос идёт в живые базы ТО.</p>
+      <ol class="pipeline">
+        <li>
+          <span class="step">01</span>
+          <strong>Сайт агентства</strong>
+          <p>Турист задаёт параметры поиска</p>
+        </li>
+        <li>
+          <span class="step">02</span>
+          <strong>Наш API-прокси</strong>
+          <p>Подпись, фильтры, единый формат ответа</p>
+        </li>
+        <li>
+          <span class="step">03</span>
+          <strong>Andromeda</strong>
+          <p>Маршрутизация к подключённым ТО</p>
+        </li>
+        <li>
+          <span class="step">04</span>
+          <strong>САМО-Тур / ТО</strong>
+          <p>Актуальная цена → бронь в базе оператора</p>
+        </li>
+      </ol>
+    </section>
+
+    <section id="demo" class="demo">
+      <div class="demo-head">
+        <h2>Интерактивное демо</h2>
+        <p class="section-lede">Имитация цепочки поиска (mock). Логика и поля — как в реальной интеграции.</p>
+      </div>
+
+      <form class="search" id="searchForm">
+        <label>
+          Откуда
+          <select name="from" required>
+            <option value="MOW">Москва</option>
+            <option value="LED">Санкт-Петербург</option>
+            <option value="KZN">Казань</option>
+            <option value="SVX">Екатеринбург</option>
+          </select>
+        </label>
+        <label>
+          Куда
+          <select name="to" required>
+            <option value="TR">Турция</option>
+            <option value="EG">Египет</option>
+            <option value="AE">ОАЭ</option>
+            <option value="TH">Таиланд</option>
+          </select>
+        </label>
+        <label>
+          Вылет с
+          <input type="date" name="dateFrom" required />
+        </label>
+        <label>
+          Ночей
+          <select name="nights">
+            <option>7</option>
+            <option selected>10</option>
+            <option>14</option>
+          </select>
+        </label>
+        <label>
+          Туристы
+          <select name="adults">
+            <option value="2" selected>2 взрослых</option>
+            <option value="1">1 взрослый</option>
+            <option value="3">3 взрослых</option>
+          </select>
+        </label>
+        <button type="submit" class="btn primary search-btn">Найти туры</button>
+      </form>
+
+      <div class="api-trace" id="apiTrace" hidden>
+        <div class="trace-title">Запрос к прокси → Andromeda</div>
+        <pre id="traceBody"></pre>
+      </div>
+
+      <div class="results" id="results" aria-live="polite"></div>
+    </section>
+
+    <section class="cta-block">
+      <h2>Готовы обсудить ваш контур</h2>
+      <p>
+        САМО-Тур / САМО-турагент / Andromeda API — поиск, бронь, статусы, документы.
+        Можем созвониться и пройтись по вашему ТЗ на видео.
+      </p>
+      <p class="contact">Pants of Fortune · кейс по САМО</p>
+    </section>
+  </main>
+
+  <footer>
+    <span>Демо-кейс · Andromeda API</span>
+    <span>Не продакшен-ключи · mock-данные</span>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

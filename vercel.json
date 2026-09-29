@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "name": "samo-prikol",
+  "builds": [
+    {
+      "src": "**",
+      "use": "@vercel/static"
+    }
+  ],
+  "cleanUrls": true,
+  "trailingSlash": false
+}
