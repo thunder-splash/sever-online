@@ -4,17 +4,17 @@
 
 Артур, добрый день!
 
-Кейс по Andromeda / САМО — демо поиска с живой логикой запроса (`GET_PRICE_FOR_AGENT`, STATEINC / TOWNFROMINC как INC из справочников, прокси, бронь в базу ТО).
+Демо поиска туров на Andromeda API (логика как в интеграции с САМО: `GET_PRICE_FOR_AGENT`, INC из справочников, актуализация цены).
 
-👉 https://thunder-splash.github.io/samo-prikol/
+👉 https://thunder-splash.github.io/sever-online/
 
-Можем созвониться и пройтись по вашему ТЗ. Когда удобно?
+Можем созвониться и пройтись по ТЗ. Когда удобно?
 
 ---
 
 ## Короткий
 
-Артур, вот демо по Andromeda API:  
-https://thunder-splash.github.io/samo-prikol/
+Артур, демо по Andromeda:  
+https://thunder-splash.github.io/sever-online/
 
 Готов к видео — напишите слот.

@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "name": "samo-prikol",
+  "name": "sever-online",
   "builds": [
     {
       "src": "**",
