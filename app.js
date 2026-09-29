@@ -16,12 +16,14 @@ const DEST = {
     aliases: ["turkey", "турция", "анталия"],
     resorts: ["Белек", "Аланья", "Сиде", "Кемер", "Анталья"],
     hotels: [
-      { name: "Rixos Premium Belek", stars: 5, meal: "AI", resort: "Белек", img: "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=800&q=70" },
-      { name: "Crystal Waterworld", stars: 5, meal: "UAI", resort: "Белек", img: "https://images.unsplash.com/photo-1582719508461-905c673771fd?auto=format&fit=crop&w=800&q=70" },
-      { name: "Orange County Alanya", stars: 5, meal: "AI", resort: "Аланья", img: "https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=800&q=70" },
-      { name: "Sueno Hotels Beach Side", stars: 4, meal: "AI", resort: "Сиде", img: "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=800&q=70" },
-      { name: "Selectum Family Resort", stars: 5, meal: "UAI", resort: "Белек", img: "https://images.unsplash.com/photo-1610641818989-c2051b5e2fcb?auto=format&fit=crop&w=800&q=70" },
-      { name: "Sunmelia Beach Resort", stars: 4, meal: "HB", resort: "Кемер", img: "https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?auto=format&fit=crop&w=800&q=70" },
+      { name: "Rixos Premium Belek", stars: 5, meal: "AI", resort: "Белек", beach: "1 линия", rating: 9.2 },
+      { name: "Crystal Waterworld", stars: 5, meal: "UAI", resort: "Белек", beach: "1 линия", rating: 8.9 },
+      { name: "Orange County Alanya", stars: 5, meal: "AI", resort: "Аланья", beach: "2 линия", rating: 8.7 },
+      { name: "Sueno Hotels Beach Side", stars: 4, meal: "AI", resort: "Сиде", beach: "1 линия", rating: 8.4 },
+      { name: "Selectum Family Resort", stars: 5, meal: "UAI", resort: "Белек", beach: "1 линия", rating: 9.0 },
+      { name: "Sunmelia Beach Resort", stars: 4, meal: "HB", resort: "Кемер", beach: "2 линия", rating: 8.1 },
+      { name: "Granada Luxury Belek", stars: 5, meal: "UAI", resort: "Белек", beach: "1 линия", rating: 8.8 },
+      { name: "Kirman Leodikya Resort", stars: 5, meal: "AI", resort: "Аланья", beach: "1 линия", rating: 8.6 },
     ],
   },
   23: {
@@ -30,10 +32,11 @@ const DEST = {
     aliases: ["egypt", "египет", "хургада", "шарм"],
     resorts: ["Хургада", "Шарм-эль-Шейх"],
     hotels: [
-      { name: "Rixos Sharm El Sheikh", stars: 5, meal: "AI", resort: "Шарм-эль-Шейх", img: "https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?auto=format&fit=crop&w=800&q=70" },
-      { name: "Steigenberger Alcazar", stars: 5, meal: "AI", resort: "Хургада", img: "https://images.unsplash.com/photo-1540541338287-41700207dee6?auto=format&fit=crop&w=800&q=70" },
-      { name: "Pickalbatros Palace", stars: 5, meal: "AI", resort: "Хургада", img: "https://images.unsplash.com/photo-1610641818989-c2051b5e2fcb?auto=format&fit=crop&w=800&q=70" },
-      { name: "Jaz Mirabel Beach", stars: 5, meal: "AI", resort: "Шарм-эль-Шейх", img: "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=800&q=70" },
+      { name: "Rixos Sharm El Sheikh", stars: 5, meal: "AI", resort: "Шарм-эль-Шейх", beach: "1 линия", rating: 9.1 },
+      { name: "Steigenberger Alcazar", stars: 5, meal: "AI", resort: "Хургада", beach: "1 линия", rating: 8.8 },
+      { name: "Pickalbatros Palace", stars: 5, meal: "AI", resort: "Хургада", beach: "1 линия", rating: 8.5 },
+      { name: "Jaz Mirabel Beach", stars: 5, meal: "AI", resort: "Шарм-эль-Шейх", beach: "1 линия", rating: 8.7 },
+      { name: "Sunrise Holidays Resort", stars: 5, meal: "AI", resort: "Хургада", beach: "2 линия", rating: 8.3 },
     ],
   },
   41: {
@@ -42,10 +45,11 @@ const DEST = {
     aliases: ["uae", "оаэ", "дубай", "dubai"],
     resorts: ["Дубай", "Абу-Даби"],
     hotels: [
-      { name: "Rixos The Palm Dubai", stars: 5, meal: "BB", resort: "Дубай", img: "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&w=800&q=70" },
-      { name: "Atlantis The Palm", stars: 5, meal: "BB", resort: "Дубай", img: "https://images.unsplash.com/photo-1580674684081-7617fbf3d745?auto=format&fit=crop&w=800&q=70" },
-      { name: "Hilton Dubai Jumeirah", stars: 5, meal: "HB", resort: "Дубай", img: "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=800&q=70" },
-      { name: "Address Beach Resort", stars: 5, meal: "BB", resort: "Дубай", img: "https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=800&q=70" },
+      { name: "Rixos The Palm Dubai", stars: 5, meal: "BB", resort: "Дубай", beach: "Palm", rating: 9.3 },
+      { name: "Atlantis The Palm", stars: 5, meal: "BB", resort: "Дубай", beach: "Palm", rating: 9.0 },
+      { name: "Hilton Dubai Jumeirah", stars: 5, meal: "HB", resort: "Дубай", beach: "JBR", rating: 8.6 },
+      { name: "Address Beach Resort", stars: 5, meal: "BB", resort: "Дубай", beach: "JBR", rating: 9.1 },
+      { name: "Rixos Marina Abu Dhabi", stars: 5, meal: "BB", resort: "Абу-Даби", beach: "Marina", rating: 8.8 },
     ],
   },
   58: {
@@ -54,10 +58,11 @@ const DEST = {
     aliases: ["thailand", "таиланд", "пхукет", "паттайя"],
     resorts: ["Пхукет", "Паттайя", "Самуи"],
     hotels: [
-      { name: "Kata Rocks", stars: 5, meal: "BB", resort: "Пхукет", img: "https://images.unsplash.com/photo-1506929562872-bb421503ef21?auto=format&fit=crop&w=800&q=70" },
-      { name: "Centara Grand Mirage", stars: 5, meal: "AI", resort: "Паттайя", img: "https://images.unsplash.com/photo-1540541338287-41700207dee6?auto=format&fit=crop&w=800&q=70" },
-      { name: "Anantara Mai Khao", stars: 5, meal: "BB", resort: "Пхукет", img: "https://images.unsplash.com/photo-1439066615861-d1af74d74000?auto=format&fit=crop&w=800&q=70" },
-      { name: "Marriott Resort Pattaya", stars: 5, meal: "BB", resort: "Паттайя", img: "https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=800&q=70" },
+      { name: "Kata Rocks", stars: 5, meal: "BB", resort: "Пхукет", beach: "Kata", rating: 9.2 },
+      { name: "Centara Grand Mirage", stars: 5, meal: "AI", resort: "Паттайя", beach: "1 линия", rating: 8.7 },
+      { name: "Anantara Mai Khao", stars: 5, meal: "BB", resort: "Пхукет", beach: "Mai Khao", rating: 9.0 },
+      { name: "Marriott Resort Pattaya", stars: 5, meal: "BB", resort: "Паттайя", beach: "1 линия", rating: 8.5 },
+      { name: "Conrad Koh Samui", stars: 5, meal: "BB", resort: "Самуи", beach: "private", rating: 9.1 },
     ],
   },
   71: {
@@ -66,9 +71,9 @@ const DEST = {
     aliases: ["maldives", "мальдивы"],
     resorts: ["Мале", "Северные атоллы"],
     hotels: [
-      { name: "Kurumba Maldives", stars: 5, meal: "BB", resort: "Мале", img: "https://images.unsplash.com/photo-1514282401047-d79a71f2618e?auto=format&fit=crop&w=800&q=70" },
-      { name: "Adaaran Select Meedhupparu", stars: 4, meal: "AI", resort: "Северные атоллы", img: "https://images.unsplash.com/photo-1439066615861-d1af74d74000?auto=format&fit=crop&w=800&q=70" },
-      { name: "Sun Siyam Iru Fushi", stars: 5, meal: "AI", resort: "Северные атоллы", img: "https://images.unsplash.com/photo-1506929562872-bb421503ef21?auto=format&fit=crop&w=800&q=70" },
+      { name: "Kurumba Maldives", stars: 5, meal: "BB", resort: "Мале", beach: "lagoon", rating: 9.0 },
+      { name: "Adaaran Select Meedhupparu", stars: 4, meal: "AI", resort: "Северные атоллы", beach: "reef", rating: 8.4 },
+      { name: "Sun Siyam Iru Fushi", stars: 5, meal: "AI", resort: "Северные атоллы", beach: "lagoon", rating: 8.9 },
     ],
   },
 };
@@ -79,7 +84,16 @@ const QUICK = [
   { label: "Москва → Турция", from: 1, to: 15 },
   { label: "СПб → Египет", from: 5, to: 23 },
   { label: "Казань → Дубай", from: 9, to: 41 },
-  { label: "Белек AI", from: 1, to: 15, hotelHint: "Belek" },
+  { label: "Белек", from: 1, to: 15, hotelHint: "Белек" },
+];
+
+const PALETTE = [
+  ["#1c4b5c", "#3d7a8c"],
+  ["#8b3a2f", "#c47a4a"],
+  ["#2a5f4a", "#6aa88a"],
+  ["#3d3a66", "#7a74b0"],
+  ["#6b4c2a", "#c4a06a"],
+  ["#1f3d5c", "#5a8fb5"],
 ];
 
 const state = {
@@ -91,6 +105,10 @@ const state = {
   quotedPrice: null,
   meal: "all",
   sort: "price",
+  groupByResort: true,
+  perPerson: false,
+  compare: [],
+  favs: new Set(JSON.parse(localStorage.getItem("sever-favs") || "[]")),
   order: null,
   orders: loadOrders(),
 };
@@ -105,6 +123,10 @@ function loadOrders() {
 
 function saveOrders() {
   localStorage.setItem("sever-orders", JSON.stringify(state.orders.slice(0, 20)));
+}
+
+function saveFavs() {
+  localStorage.setItem("sever-favs", JSON.stringify([...state.favs]));
 }
 
 function sleep(ms) {
@@ -124,6 +146,33 @@ function norm(s) {
     .toLowerCase()
     .replace(/ё/g, "е")
     .trim();
+}
+
+function hash(str) {
+  let h = 0;
+  for (let i = 0; i < str.length; i++) h = (h * 31 + str.charCodeAt(i)) >>> 0;
+  return h;
+}
+
+function cover(hotel, resort) {
+  const [a, b] = PALETTE[hash(hotel) % PALETTE.length];
+  const initials = hotel
+    .split(/\s+/)
+    .slice(0, 2)
+    .map((w) => w[0])
+    .join("")
+    .toUpperCase();
+  const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='480' height='360' viewBox='0 0 480 360'>
+    <defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'>
+      <stop stop-color='${a}'/><stop offset='1' stop-color='${b}'/>
+    </linearGradient></defs>
+    <rect width='480' height='360' fill='url(#g)'/>
+    <circle cx='390' cy='70' r='54' fill='rgba(255,255,255,.12)'/>
+    <circle cx='60' cy='300' r='80' fill='rgba(0,0,0,.12)'/>
+    <text x='32' y='58' fill='rgba(255,255,255,.85)' font-family='Arial,sans-serif' font-size='18' font-weight='700'>${resort}</text>
+    <text x='32' y='300' fill='rgba(255,255,255,.95)' font-family='Arial,sans-serif' font-size='64' font-weight='700'>${initials}</text>
+  </svg>`;
+  return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
 }
 
 function setDefaultDate() {
@@ -179,31 +228,44 @@ function mockSearch(params) {
     );
     if (filtered.length) hotels = filtered;
   }
-  return hotels.map((h, i) => {
-    const base = 72000 + i * 16800 + Number(params.nights) * 3900 + h.stars * 4500;
-    const adults = Number(params.adults);
-    const price = Math.round(base * (adults / 2) * (0.95 + ((i * 17) % 10) / 100));
-    return {
-      id: `T-${params.to}-${i}-${h.name.slice(0, 3)}`,
-      hotel: h.name,
-      stars: h.stars,
-      meal: h.meal,
-      resort: h.resort,
-      img: h.img,
-      country: dest.name,
-      from: town.name,
-      fromCode: town.code,
-      toCode: dest.iata,
-      nights: Number(params.nights),
-      dateFrom: params.dateFrom,
-      adults,
-      operator: OPS[i % OPS.length],
-      price,
-      room: i % 2 === 0 ? "Standard Room" : "Deluxe Sea View",
-      services: ["перелёт", "проживание", h.meal, "медицинская страховка"],
-      flights: makeFlights(town.code, dest.iata, params.dateFrom, params.nights),
-    };
+  // несколько операторов на часть отелей — как в реальной выдаче
+  const rows = [];
+  hotels.forEach((h, i) => {
+    const opCount = 1 + (i % 3 === 0 ? 1 : 0);
+    for (let o = 0; o < opCount; o++) {
+      const base = 72000 + i * 14800 + o * 9200 + Number(params.nights) * 3900 + h.stars * 4200;
+      const adults = Number(params.adults);
+      const price = Math.round(base * (adults / 2) * (0.95 + ((i * 17 + o * 9) % 10) / 100));
+      rows.push({
+        id: `T-${params.to}-${i}-${o}`,
+        hotel: h.name,
+        stars: h.stars,
+        meal: h.meal,
+        resort: h.resort,
+        beach: h.beach,
+        rating: h.rating,
+        cover: cover(h.name, h.resort),
+        country: dest.name,
+        from: town.name,
+        fromCode: town.code,
+        toCode: dest.iata,
+        nights: Number(params.nights),
+        dateFrom: params.dateFrom,
+        adults,
+        operator: OPS[(i + o) % OPS.length],
+        price,
+        oldPrice: o === 1 ? Math.round(price * 1.08) : null,
+        room: o === 0 ? "Standard Room" : "Deluxe Sea View",
+        services: ["перелёт", "проживание", h.meal, "мед. страховка"],
+        flights: makeFlights(town.code, dest.iata, params.dateFrom, params.nights),
+      });
+    }
   });
+  return rows;
+}
+
+function displayPrice(tour) {
+  return state.perPerson ? tour.price / tour.adults : tour.price;
 }
 
 function currentPrice(tour) {
@@ -216,7 +278,7 @@ function currentPrice(tour) {
 }
 
 function showView(name) {
-  ["search", "detail", "book", "order", "desk"].forEach((v) => {
+  ["search", "detail", "book", "order", "desk", "compare"].forEach((v) => {
     const el = document.getElementById(`view-${v}`);
     if (el) el.hidden = v !== name;
   });
@@ -226,12 +288,13 @@ function showView(name) {
     book: "sever.travel / booking",
     order: "sever.travel / order",
     desk: "sever.travel / desk",
+    compare: "sever.travel / compare",
   };
   document.getElementById("chromeUrl").textContent = map[name];
   document.getElementById("product").scrollIntoView({ behavior: "smooth", block: "start" });
+  renderCompareBar();
 }
 
-/* ---------- autocomplete ---------- */
 function scoreMatch(query, text, aliases = []) {
   const q = norm(query);
   if (!q) return 1;
@@ -258,9 +321,7 @@ function searchTo(query) {
   const out = [];
   Object.entries(DEST).forEach(([id, d]) => {
     const countryScore = scoreMatch(query, d.name, d.aliases);
-    if (countryScore) {
-      out.push({ score: countryScore + 0.5, id: Number(id), title: d.name, meta: "страна", type: "country", hotelHint: "" });
-    }
+    if (countryScore) out.push({ score: countryScore + 0.5, id: Number(id), title: d.name, meta: "страна", type: "country", hotelHint: "" });
     d.resorts.forEach((r) => {
       const s = scoreMatch(query, r, d.aliases);
       if (s) out.push({ score: s, id: Number(id), title: r, meta: d.name, type: "resort", hotelHint: r });
@@ -276,7 +337,7 @@ function searchTo(query) {
     .slice(0, 10);
 }
 
-function bindAutocomplete({ input, list, hiddenId, hiddenHint, searcher, onPick }) {
+function bindAutocomplete({ input, list, hiddenId, hiddenHint, searcher }) {
   let items = [];
   let active = -1;
 
@@ -290,7 +351,7 @@ function bindAutocomplete({ input, list, hiddenId, hiddenHint, searcher, onPick 
     list.innerHTML = items
       .map(
         (it, i) => `
-      <li class="ac-item ${i === active ? "is-active" : ""}" data-idx="${i}" role="option">
+      <li class="ac-item ${i === active ? "is-active" : ""}" data-idx="${i}">
         <strong>${it.title}</strong>
         <span>${it.meta}${it.type === "hotel" ? " · отель" : it.type === "resort" ? " · курорт" : ""}</span>
       </li>`
@@ -307,7 +368,6 @@ function bindAutocomplete({ input, list, hiddenId, hiddenHint, searcher, onPick 
     list.hidden = true;
     items = [];
     active = -1;
-    onPick?.(it);
   }
 
   input.addEventListener("input", () => {
@@ -317,16 +377,11 @@ function bindAutocomplete({ input, list, hiddenId, hiddenHint, searcher, onPick 
     active = items.length ? 0 : -1;
     render();
   });
-
   input.addEventListener("focus", () => {
-    items = searcher(input.value || " ");
-    if (!String(input.value || "").trim()) {
-      items = searcher("").slice(0, 6);
-    }
+    items = searcher(input.value || "");
     active = 0;
     render();
   });
-
   input.addEventListener("keydown", (e) => {
     if (list.hidden) return;
     if (e.key === "ArrowDown") {
@@ -340,18 +395,14 @@ function bindAutocomplete({ input, list, hiddenId, hiddenHint, searcher, onPick 
     } else if (e.key === "Enter" && active >= 0) {
       e.preventDefault();
       pick(active);
-    } else if (e.key === "Escape") {
-      list.hidden = true;
-    }
+    } else if (e.key === "Escape") list.hidden = true;
   });
-
   list.addEventListener("mousedown", (e) => {
     const li = e.target.closest("[data-idx]");
     if (!li) return;
     e.preventDefault();
     pick(Number(li.dataset.idx));
   });
-
   document.addEventListener("click", (e) => {
     if (!e.target.closest(".ac")) list.hidden = true;
   });
@@ -393,7 +444,58 @@ function filteredResults() {
   if (state.sort === "price-desc") items.sort((a, b) => b.price - a.price);
   if (state.sort === "stars") items.sort((a, b) => b.stars - a.stars || a.price - b.price);
   if (state.sort === "ops") items.sort((a, b) => a.operator.localeCompare(b.operator, "ru") || a.price - b.price);
+  if (state.sort === "rating") items.sort((a, b) => b.rating - a.rating || a.price - b.price);
   return items;
+}
+
+function cardHtml(t, idx) {
+  const fav = state.favs.has(t.id);
+  const compared = state.compare.includes(t.id);
+  const price = displayPrice(t);
+  const priceNote = state.perPerson ? "с человека" : "за номер";
+  return `
+    <article class="offer" style="animation-delay:${idx * 0.03}s">
+      <div class="offer-media">
+        <img src="${t.cover}" alt="" />
+        <button type="button" class="fav ${fav ? "is-on" : ""}" data-fav="${t.id}" aria-label="В избранное">${fav ? "★" : "☆"}</button>
+        <span class="rating">${t.rating.toFixed(1)}</span>
+      </div>
+      <div class="offer-body">
+        <div class="offer-title">
+          <h3>${t.hotel}</h3>
+          <span class="stars">${"★".repeat(t.stars)}</span>
+        </div>
+        <div class="offer-line">
+          <span>${t.resort}</span>
+          <span class="dot-sep">·</span>
+          <span>${t.beach}</span>
+          <span class="dot-sep">·</span>
+          <span>${t.nights} ночей</span>
+          <span class="dot-sep">·</span>
+          <span>${formatDate(t.dateFrom)}</span>
+        </div>
+        <div class="offer-tags">
+          <span class="tag meal">${t.meal}</span>
+          <span class="tag">${t.operator}</span>
+          <span class="tag ghost">${t.room}</span>
+          <span class="tag ghost">${t.flights[0].note}</span>
+        </div>
+      </div>
+      <div class="offer-side">
+        ${t.oldPrice ? `<span class="old">${rub(state.perPerson ? t.oldPrice / t.adults : t.oldPrice)}</span>` : ""}
+        <div class="offer-price">${rub(price)}</div>
+        <div class="offer-note">${priceNote}</div>
+        <div class="offer-actions">
+          <button type="button" class="linkish" data-open="${t.id}">Подробнее</button>
+          <button type="button" class="mini ${compared ? "is-on" : ""}" data-compare="${t.id}">${compared ? "В сравнении" : "Сравнить"}</button>
+        </div>
+      </div>
+    </article>`;
+}
+
+function formatDate(iso) {
+  const [y, m, d] = iso.split("-");
+  return `${d}.${m}.${y}`;
 }
 
 function renderResults() {
@@ -403,41 +505,124 @@ function renderResults() {
   const town = TOWNS.find((t) => t.id === Number(p.from));
   document.getElementById("toolbar").hidden = false;
   document.getElementById("boardTitle").textContent = `${items.length} предложений`;
-  document.getElementById("boardMeta").textContent = `${town.name} → ${DEST[p.to].name} · ${p.nights} ночей`;
+  document.getElementById("boardMeta").textContent = `${town.name} → ${DEST[p.to].name} · ${p.nights} ночей · ${p.adults} взр.`;
 
   if (!items.length) {
     root.innerHTML = '<div class="hint">Пусто по фильтру — нажми «Все»</div>';
+    renderCompareBar();
     return;
   }
 
-  root.innerHTML = items
-    .map(
-      (t, idx) => `
-      <article class="card" style="animation-delay:${idx * 0.04}s">
-        <img class="thumb" src="${t.img}" alt="" loading="lazy" />
-        <div>
-          <h3>${t.hotel} <span class="stars">${"★".repeat(t.stars)}</span></h3>
-          <div class="meta">
-            <span>${t.resort}</span>
-            <span>${t.nights} н. · ${t.dateFrom}</span>
-            <span>${t.meal}</span>
-            <span class="chip">${t.operator}</span>
-          </div>
-        </div>
-        <div class="price">
-          <div>
-            <b>${rub(t.price)}</b>
-            <small>за номер</small>
-          </div>
-          <button type="button" class="book" data-open="${t.id}">Подробнее</button>
-        </div>
-      </article>`
-    )
-    .join("");
+  if (state.groupByResort) {
+    const groups = {};
+    items.forEach((t) => {
+      (groups[t.resort] ||= []).push(t);
+    });
+    root.innerHTML = Object.entries(groups)
+      .map(([resort, rows]) => {
+        const min = Math.min(...rows.map((r) => displayPrice(r)));
+        return `
+          <section class="resort-block">
+            <div class="resort-head">
+              <h3>${resort}</h3>
+              <span>от ${rub(min)} · ${rows.length} вар.</span>
+            </div>
+            <div class="offer-list">${rows.map((t, i) => cardHtml(t, i)).join("")}</div>
+          </section>`;
+      })
+      .join("");
+  } else {
+    root.innerHTML = `<div class="offer-list">${items.map((t, i) => cardHtml(t, i)).join("")}</div>`;
+  }
 
-  root.querySelectorAll("[data-open]").forEach((btn) => {
-    btn.addEventListener("click", () => openDetail(btn.dataset.open));
+  root.querySelectorAll("[data-open]").forEach((btn) => btn.addEventListener("click", () => openDetail(btn.dataset.open)));
+  root.querySelectorAll("[data-fav]").forEach((btn) =>
+    btn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      toggleFav(btn.dataset.fav);
+    })
+  );
+  root.querySelectorAll("[data-compare]").forEach((btn) =>
+    btn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      toggleCompare(btn.dataset.compare);
+    })
+  );
+  renderCompareBar();
+}
+
+function toggleFav(id) {
+  if (state.favs.has(id)) state.favs.delete(id);
+  else state.favs.add(id);
+  saveFavs();
+  renderResults();
+}
+
+function toggleCompare(id) {
+  if (state.compare.includes(id)) state.compare = state.compare.filter((x) => x !== id);
+  else if (state.compare.length < 3) state.compare.push(id);
+  renderResults();
+}
+
+function renderCompareBar() {
+  let bar = document.getElementById("compareBar");
+  if (!bar) {
+    bar = document.createElement("div");
+    bar.id = "compareBar";
+    bar.className = "compare-bar";
+    document.getElementById("app").appendChild(bar);
+  }
+  if (!state.compare.length || document.getElementById("view-search").hidden === false && false) {
+    /* keep visible on search mostly */
+  }
+  if (!state.compare.length) {
+    bar.hidden = true;
+    return;
+  }
+  const tours = state.compare.map((id) => state.results.find((t) => t.id === id)).filter(Boolean);
+  bar.hidden = false;
+  bar.innerHTML = `
+    <div class="compare-bar-in">
+      <span>Сравнение · ${tours.length}/3</span>
+      <div class="compare-pills">${tours.map((t) => `<em>${t.hotel.split(" ").slice(0, 2).join(" ")}</em>`).join("")}</div>
+      <button type="button" class="go" id="openCompare">Сравнить</button>
+      <button type="button" class="ghost-btn" id="clearCompare">Сбросить</button>
+    </div>`;
+  bar.querySelector("#openCompare").addEventListener("click", renderCompare);
+  bar.querySelector("#clearCompare").addEventListener("click", () => {
+    state.compare = [];
+    renderResults();
   });
+}
+
+function renderCompare() {
+  const tours = state.compare.map((id) => state.results.find((t) => t.id === id)).filter(Boolean);
+  showView("compare");
+  const box = document.getElementById("view-compare");
+  box.innerHTML = `
+    <button type="button" class="back" id="cmpBack">← к результатам</button>
+    <div class="cmp-grid" style="--cols:${tours.length}">
+      ${tours
+        .map(
+          (t) => `
+        <article class="cmp-card">
+          <img src="${t.cover}" alt="" />
+          <h3>${t.hotel}</h3>
+          <ul>
+            <li><span>Курорт</span><b>${t.resort}</b></li>
+            <li><span>Питание</span><b>${t.meal}</b></li>
+            <li><span>Оператор</span><b>${t.operator}</b></li>
+            <li><span>Рейтинг</span><b>${t.rating}</b></li>
+            <li><span>Номер</span><b>${t.room}</b></li>
+            <li><span>Цена</span><b>${rub(t.price)}</b></li>
+          </ul>
+          <button type="button" class="go" data-open="${t.id}">Выбрать</button>
+        </article>`
+        )
+        .join("")}
+    </div>`;
+  box.querySelector("#cmpBack").addEventListener("click", () => showView("search"));
+  box.querySelectorAll("[data-open]").forEach((btn) => btn.addEventListener("click", () => openDetail(btn.dataset.open)));
 }
 
 async function openDetail(id) {
@@ -448,9 +633,8 @@ async function openDetail(id) {
   showView("detail");
   const box = document.getElementById("view-detail");
   box.innerHTML = '<div class="wait">Актуализируем цену у туроператора…</div>';
-  await sleep(500 + Math.random() * 500);
-  const drift = Math.round(state.selected.price * (0.97 + Math.random() * 0.08));
-  state.selected.price = drift;
+  await sleep(450 + Math.random() * 450);
+  state.selected.price = Math.round(state.selected.price * (0.97 + Math.random() * 0.08));
   renderDetail();
 }
 
@@ -461,19 +645,18 @@ function renderDetail() {
   const box = document.getElementById("view-detail");
   box.innerHTML = `
     <button type="button" class="back" id="backSearch">← к результатам</button>
-    ${
-      changed
-        ? `<div class="alert">Цена изменилась после актуализации: было ${rub(state.quotedPrice)}, стало ${rub(t.price)}</div>`
-        : ""
-    }
+    ${changed ? `<div class="alert">Цена изменилась: было ${rub(state.quotedPrice)}, стало ${rub(t.price)}</div>` : ""}
     <div class="detail">
-      <img class="detail-hero" src="${t.img}" alt="" />
+      <div class="detail-hero-wrap">
+        <img class="detail-hero" src="${t.cover}" alt="" />
+        <span class="rating big">${t.rating.toFixed(1)}</span>
+      </div>
       <div class="detail-body">
         <div class="detail-top">
           <div>
             <p class="chip">${t.operator}</p>
             <h2>${t.hotel}</h2>
-            <p class="muted">${t.resort}, ${t.country} · ${"★".repeat(t.stars)} · ${t.room}</p>
+            <p class="muted">${t.resort}, ${t.country} · ${"★".repeat(t.stars)} · ${t.room} · ${t.beach}</p>
           </div>
           <div class="detail-price">
             <b>${rub(price)}</b>
@@ -535,8 +718,7 @@ function renderDetail() {
   box.querySelector("#toBook").addEventListener("click", renderBook);
   box.querySelector("#reprice").addEventListener("click", async () => {
     state.quotedPrice = t.price;
-    box.querySelector("#reprice").textContent = "Считаем…";
-    await sleep(400);
+    await sleep(350);
     t.price = Math.round(t.price * (0.985 + Math.random() * 0.04));
     renderDetail();
   });
@@ -608,7 +790,7 @@ async function submitBook(e) {
   }));
   const box = document.getElementById("view-book");
   box.innerHTML = '<div class="wait">Отправляем заявку туроператору…</div>';
-  await sleep(900 + Math.random() * 600);
+  await sleep(850 + Math.random() * 550);
   const order = {
     id: uid(),
     status: "awaiting",
@@ -633,10 +815,8 @@ async function submitBook(e) {
     found.status = "confirmed";
     found.statusLabel = "Подтверждена туроператором";
     saveOrders();
-    if (state.order?.id === order.id && !document.getElementById("view-order").hidden) {
-      renderOrder(found);
-    }
-  }, 2600);
+    if (state.order?.id === order.id && !document.getElementById("view-order").hidden) renderOrder(found);
+  }, 2500);
 }
 
 function renderOrder(order) {
@@ -690,7 +870,7 @@ function renderDesk() {
     <div class="desk">
       <div class="desk-head">
         <h2>Кабинет менеджера</h2>
-        <p class="muted">${state.orders.length} заявок · статусы как из ТО</p>
+        <p class="muted">${state.orders.length} заявок</p>
       </div>
       <div class="desk-list">
         ${state.orders
@@ -706,11 +886,7 @@ function renderDesk() {
             <div class="desk-actions">
               <b>${rub(o.price)}</b>
               <button type="button" data-open-order="${o.id}">Открыть</button>
-              ${
-                o.status !== "confirmed"
-                  ? `<button type="button" data-confirm="${o.id}">Подтвердить</button>`
-                  : `<button type="button" data-docs="${o.id}">Документы</button>`
-              }
+              ${o.status !== "confirmed" ? `<button type="button" data-confirm="${o.id}">Подтвердить</button>` : `<button type="button" data-docs="${o.id}">Документы</button>`}
             </div>
           </article>`
           )
@@ -720,9 +896,8 @@ function renderDesk() {
   box.querySelector("#deskBack").addEventListener("click", () => showView("search"));
   box.querySelectorAll("[data-open-order]").forEach((btn) => {
     btn.addEventListener("click", () => {
-      const o = state.orders.find((x) => x.id === btn.dataset.openOrder);
-      state.order = o;
-      renderOrder(o);
+      state.order = state.orders.find((x) => x.id === btn.dataset.openOrder);
+      renderOrder(state.order);
     });
   });
   box.querySelectorAll("[data-confirm]").forEach((btn) => {
@@ -736,23 +911,19 @@ function renderDesk() {
   });
   box.querySelectorAll("[data-docs]").forEach((btn) => {
     btn.addEventListener("click", () => {
-      const o = state.orders.find((x) => x.id === btn.dataset.docs);
-      state.order = o;
-      renderOrder(o);
+      state.order = state.orders.find((x) => x.id === btn.dataset.docs);
+      renderOrder(state.order);
     });
   });
 }
 
-/* steppers */
 document.querySelectorAll("[data-step]").forEach((btn) => {
   btn.addEventListener("click", () => {
     const key = btn.dataset.step;
     const input = document.getElementById(key === "nights" ? "nightsVal" : "adultsVal");
     const min = key === "nights" ? 5 : 1;
     const max = key === "nights" ? 21 : 4;
-    let v = Number(input.value) + Number(btn.dataset.dir);
-    v = Math.max(min, Math.min(max, v));
-    input.value = v;
+    input.value = Math.max(min, Math.min(max, Number(input.value) + Number(btn.dataset.dir)));
   });
 });
 
@@ -767,8 +938,27 @@ document.getElementById("mealChips").addEventListener("click", (e) => {
 document.getElementById("sortChips").addEventListener("click", (e) => {
   const btn = e.target.closest("[data-sort]");
   if (!btn) return;
+  if (btn.dataset.sort === "group") {
+    state.groupByResort = !state.groupByResort;
+    btn.classList.toggle("is-on", state.groupByResort);
+    if (state.results.length) renderResults();
+    return;
+  }
+  if (btn.dataset.sort === "pp") {
+    state.perPerson = !state.perPerson;
+    btn.classList.toggle("is-on", state.perPerson);
+    if (state.results.length) renderResults();
+    return;
+  }
   state.sort = btn.dataset.sort;
-  document.querySelectorAll("#sortChips .chip-btn").forEach((b) => b.classList.toggle("is-on", b === btn));
+  document.querySelectorAll("#sortChips .chip-btn[data-sort]:not([data-sort=group]):not([data-sort=pp])").forEach((b) => {
+    if (b.dataset.sort === "group" || b.dataset.sort === "pp") return;
+    b.classList.toggle("is-on", b === btn);
+  });
+  document.querySelectorAll('#sortChips .chip-btn').forEach((b) => {
+    if (b.dataset.sort === "group" || b.dataset.sort === "pp") return;
+    b.classList.toggle("is-on", b.dataset.sort === state.sort);
+  });
   if (state.results.length) renderResults();
 });
 
@@ -777,8 +967,7 @@ document.getElementById("searchForm").addEventListener("submit", async (e) => {
   const from = document.getElementById("fromId").value;
   const to = document.getElementById("toId").value;
   if (!from || !to) {
-    document.getElementById("results").innerHTML =
-      '<div class="hint">Выбери город и направление из подсказок</div>';
+    document.getElementById("results").innerHTML = '<div class="hint">Выбери город и направление из подсказок</div>';
     return;
   }
   const params = {
@@ -790,11 +979,12 @@ document.getElementById("searchForm").addEventListener("submit", async (e) => {
     adults: e.target.adults.value,
   };
   state.params = params;
+  state.compare = [];
   showView("search");
   document.getElementById("results").innerHTML = '<div class="wait">Ищем по справочникам и базам ТО…</div>';
   document.getElementById("toolbar").hidden = true;
   document.getElementById("sampleTrace").textContent = JSON.stringify(buildTrace(params), null, 2);
-  await sleep(480 + Math.random() * 420);
+  await sleep(420 + Math.random() * 380);
   state.results = mockSearch(params);
   renderResults();
 });
@@ -812,7 +1002,6 @@ bindAutocomplete({
   hiddenId: document.getElementById("fromId"),
   searcher: searchFrom,
 });
-
 bindAutocomplete({
   input: document.getElementById("toInput"),
   list: document.getElementById("toList"),
