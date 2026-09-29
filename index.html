@@ -3,86 +3,139 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Поиск туров · Andromeda</title>
+  <title>Север — онлайн-поиск туров</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Syne:wght@600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Syne:wght@600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <header class="bar">
     <a class="mark" href="./">Север<span>.</span></a>
-    <span class="bar-note">онлайн-поиск · Andromeda</span>
+    <nav>
+      <a href="#product">Продукт</a>
+      <a href="#stack">Интеграция</a>
+    </nav>
   </header>
 
   <main>
-    <section class="stage">
-      <div class="stage-bg" aria-hidden="true"></div>
-      <div class="stage-inner">
-        <h1>Север.</h1>
-        <p class="sub">Пакетные туры с живыми ценами из баз туроператоров.</p>
+    <section class="intro">
+      <p class="kicker">Andromeda API · САМО</p>
+      <h1>Свой поиск туров<br />без выгрузки прайсов</h1>
+      <p class="lead">
+        Витрина агентства ходит в живые базы туроператоров через Андромеду:
+        актуальная цена на экране, бронь сразу в системе ТО.
+      </p>
+    </section>
 
-        <form class="finder" id="searchForm">
-          <label class="field">
-            <span>Откуда</span>
-            <select name="from" required>
-              <option value="1">Москва</option>
-              <option value="5">Санкт-Петербург</option>
-              <option value="9">Казань</option>
-              <option value="12">Екатеринбург</option>
-            </select>
-          </label>
-          <label class="field">
-            <span>Куда</span>
-            <select name="to" required>
-              <option value="15">Турция</option>
-              <option value="23">Египет</option>
-              <option value="41">ОАЭ</option>
-              <option value="58">Таиланд</option>
-            </select>
-          </label>
-          <label class="field">
-            <span>Вылет</span>
-            <input type="date" name="dateFrom" required />
-          </label>
-          <label class="field narrow">
-            <span>Ночей</span>
-            <select name="nights">
-              <option>7</option>
-              <option selected>10</option>
-              <option>14</option>
-            </select>
-          </label>
-          <label class="field narrow">
-            <span>Туристы</span>
-            <select name="adults">
-              <option value="2" selected>2</option>
-              <option value="1">1</option>
-              <option value="3">3</option>
-            </select>
-          </label>
-          <button type="submit" class="go">Найти</button>
-        </form>
+    <section id="product" class="product">
+      <div class="product-shell">
+        <div class="product-chrome">
+          <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+          <span class="url">sever.travel / search</span>
+        </div>
+
+        <div class="app">
+          <div class="app-head">
+            <div class="app-logo">Север<span>.</span></div>
+            <div class="app-links">
+              <span>Туры</span>
+              <span>Отели</span>
+              <span>Поддержка</span>
+            </div>
+          </div>
+
+          <form class="finder" id="searchForm">
+            <label class="field">
+              <span>Откуда</span>
+              <select name="from" required>
+                <option value="1">Москва</option>
+                <option value="5">Санкт-Петербург</option>
+                <option value="9">Казань</option>
+                <option value="12">Екатеринбург</option>
+              </select>
+            </label>
+            <label class="field">
+              <span>Куда</span>
+              <select name="to" required>
+                <option value="15">Турция</option>
+                <option value="23">Египет</option>
+                <option value="41">ОАЭ</option>
+                <option value="58">Таиланд</option>
+              </select>
+            </label>
+            <label class="field">
+              <span>Вылет</span>
+              <input type="date" name="dateFrom" required />
+            </label>
+            <label class="field slim">
+              <span>Ночей</span>
+              <select name="nights">
+                <option>7</option>
+                <option selected>10</option>
+                <option>14</option>
+              </select>
+            </label>
+            <label class="field slim">
+              <span>Туристы</span>
+              <select name="adults">
+                <option value="2" selected>2 взр.</option>
+                <option value="1">1 взр.</option>
+                <option value="3">3 взр.</option>
+              </select>
+            </label>
+            <button type="submit" class="go">Найти</button>
+          </form>
+
+          <div class="results-head" id="resultsHead" hidden>
+            <h2 id="boardTitle">Предложения</h2>
+            <p id="boardMeta"></p>
+          </div>
+          <div class="list" id="results" aria-live="polite"></div>
+        </div>
       </div>
     </section>
 
-    <section class="board" id="board" hidden>
-      <div class="board-top">
-        <h2 id="boardTitle">Предложения</h2>
-        <button type="button" class="raw-toggle" id="rawToggle" hidden>запрос API</button>
+    <section id="stack" class="stack">
+      <div class="stack-grid">
+        <div>
+          <h2>Что под капотом</h2>
+          <p>
+            Фронт не знает ключей агента. Запрос уходит в наш прокси,
+            тот подписывает вызов Andromeda и нормализует выдачу разных ТО
+            в один формат карточки.
+          </p>
+        </div>
+        <ul class="tech">
+          <li>
+            <strong>Поиск</strong>
+            <span><code>GET_PRICE_FOR_AGENT</code> · STATEINC / TOWNFROMINC из справочников</span>
+          </li>
+          <li>
+            <strong>Пакет</strong>
+            <span>перелёт, питание, допуслуги, пересчёт перед бронью</span>
+          </li>
+          <li>
+            <strong>Бронь</strong>
+            <span>заявка в базе туроператора · статусы и документы по API</span>
+          </li>
+          <li>
+            <strong>Стек</strong>
+            <span>Next.js · Node proxy · Andromeda API</span>
+          </li>
+        </ul>
       </div>
 
-      <div class="raw" id="apiTrace" hidden>
-        <pre id="traceBody"></pre>
-      </div>
-
-      <div class="list" id="results" aria-live="polite"></div>
+      <details class="ops">
+        <summary>Пример запроса (для разработчиков)</summary>
+        <pre id="sampleTrace"></pre>
+      </details>
     </section>
   </main>
 
   <footer class="foot">
-    <span>Демо-витрина</span>
-    <span>mock · без боевых ключей</span>
+    <span>Север · поиск туров</span>
+    <span>данные в выдаче — демонстрационные</span>
   </footer>
 
   <script src="app.js"></script>
