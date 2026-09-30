@@ -4,6 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Север — онлайн-поиск туров</title>
+  <meta name="description" content="Поиск и бронирование туров через Andromeda API / САМО" />
+  <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="./favicon.svg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Syne:wght@600;700;800&display=swap" rel="stylesheet" />
@@ -11,7 +14,10 @@
 </head>
 <body>
   <header class="bar">
-    <a class="mark" href="./">Север<span>.</span></a>
+    <a class="mark" href="./">
+      <img class="mark-icon" src="./favicon.svg" width="28" height="28" alt="" />
+      Север<span>.</span>
+    </a>
     <nav>
       <a href="#product">Продукт</a>
       <a href="#stack">Интеграция</a>
@@ -23,8 +29,8 @@
       <p class="kicker">Andromeda API · САМО</p>
       <h1>Поиск → пакет → бронь<br />в одном контуре</h1>
       <p class="lead">
-        Витрина + кабинет менеджера. Начни печатать город или курорт —
-        дальше фильтры, рейсы, актуализация цены и заявка со статусом.
+        B2C-витрина и B2B-кабинет: справочники, комиссия агента, гибкие даты,
+        сравнение, бронь и статусы заявки — как в боевой интеграции с Андромедой.
       </p>
     </section>
 
@@ -37,9 +43,13 @@
 
         <div class="app" id="app">
           <div class="app-head">
-            <div class="app-logo">Север<span>.</span></div>
+            <div class="app-logo">
+              <img src="./favicon.svg" width="22" height="22" alt="" />
+              Север<span>.</span>
+            </div>
             <div class="app-links">
               <button type="button" class="text-btn" id="navSearch">Туры</button>
+              <button type="button" class="text-btn" id="navFavs">Избранное</button>
               <button type="button" class="text-btn" id="navDesk">Кабинет</button>
             </div>
           </div>
@@ -72,16 +82,28 @@
                 </div>
               </div>
               <div class="field slim stepper-field">
-                <span>Туристы</span>
+                <span>Взр.</span>
                 <div class="stepper">
                   <button type="button" data-step="adults" data-dir="-1">−</button>
                   <input name="adults" id="adultsVal" value="2" readonly />
                   <button type="button" data-step="adults" data-dir="1">+</button>
                 </div>
               </div>
+              <div class="field slim stepper-field">
+                <span>Дет.</span>
+                <div class="stepper">
+                  <button type="button" data-step="kids" data-dir="-1">−</button>
+                  <input name="kids" id="kidsVal" value="0" readonly />
+                  <button type="button" data-step="kids" data-dir="1">+</button>
+                </div>
+              </div>
               <button type="submit" class="go">Найти</button>
             </form>
+
+            <div class="kids-ages" id="kidsAges" hidden></div>
             <p class="suggest-row" id="suggestRow"></p>
+            <div class="history-row" id="historyRow" hidden></div>
+            <div class="flex-dates" id="flexDates" hidden></div>
 
             <div class="toolbar" id="toolbar" hidden>
               <div class="toolbar-top">
@@ -92,6 +114,8 @@
                 <div class="toolbar-toggles" id="sortChips">
                   <button type="button" class="toggle is-on" data-sort="group">По курортам</button>
                   <button type="button" class="toggle" data-sort="pp">За человека</button>
+                  <button type="button" class="toggle" data-sort="direct">Только прямые</button>
+                  <button type="button" class="toggle" data-sort="net">Цена нетто</button>
                 </div>
               </div>
 
@@ -113,8 +137,15 @@
                     <button type="button" class="tab" data-sort="price-desc">Дороже</button>
                     <button type="button" class="tab" data-sort="rating">Рейтинг</button>
                     <button type="button" class="tab" data-sort="ops">По ТО</button>
+                    <button type="button" class="tab" data-sort="commission">Комиссия</button>
                   </div>
                 </div>
+              </div>
+              <div class="commission-bar">
+                <label>Комиссия агента
+                  <input type="range" id="commissionRange" min="0" max="18" step="0.5" value="8" />
+                </label>
+                <strong id="commissionLabel">8%</strong>
               </div>
             </div>
             <div class="list" id="results" aria-live="polite"></div>
@@ -125,6 +156,7 @@
           <div id="view-order" class="panel" hidden></div>
           <div id="view-desk" class="panel" hidden></div>
           <div id="view-compare" class="panel" hidden></div>
+          <div id="view-favs" class="panel" hidden></div>
         </div>
       </div>
     </section>
@@ -141,8 +173,8 @@
         <ul class="tech">
           <li><strong>Справочники</strong><span>города / страны / курорты / отели как INC</span></li>
           <li><strong>Поиск</strong><span><code>GET_PRICE_FOR_AGENT</code> → нормализованная выдача</span></li>
-          <li><strong>Пакет</strong><span>рейсы · допуслуги · актуализация цены</span></li>
-          <li><strong>Заявка</strong><span>бронь → статус ТО → документы · кабинет</span></li>
+          <li><strong>B2B</strong><span>комиссия · нетто/брутто · кабинет заявок</span></li>
+          <li><strong>Бронь</strong><span>рейсы · допуслуги · статусы · документы · КП</span></li>
         </ul>
       </div>
       <details class="ops">

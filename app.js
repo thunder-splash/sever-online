@@ -98,8 +98,13 @@ const state = {
   sort: "price",
   groupByResort: true,
   perPerson: false,
+  directOnly: false,
+  showNet: false,
+  commission: 8,
+  dateOffset: 0,
   compare: [],
   favs: new Set(JSON.parse(localStorage.getItem("sever-favs") || "[]")),
+  history: JSON.parse(localStorage.getItem("sever-history") || "[]"),
   order: null,
   orders: loadOrders(),
 };
@@ -118,6 +123,41 @@ function saveOrders() {
 
 function saveFavs() {
   localStorage.setItem("sever-favs", JSON.stringify([...state.favs]));
+}
+
+function saveHistory(entry) {
+  state.history = [entry, ...state.history.filter((h) => h.key !== entry.key)].slice(0, 6);
+  localStorage.setItem("sever-history", JSON.stringify(state.history));
+  renderHistory();
+}
+
+function shiftDate(iso, days) {
+  const d = new Date(iso + "T12:00:00");
+  d.setDate(d.getDate() + days);
+  return d.toISOString().slice(0, 10);
+}
+
+function peopleCount(params = state.params) {
+  if (!params) return 2;
+  return Number(params.adults || 2) + Number(params.kids || 0);
+}
+
+function grossPrice(tour) {
+  return tour.price;
+}
+
+function netPrice(tour) {
+  return Math.round(tour.price * (1 - state.commission / 100));
+}
+
+function agentFee(tour) {
+  return grossPrice(tour) - netPrice(tour);
+}
+
+function displayPrice(tour) {
+  let p = state.showNet ? netPrice(tour) : tour.price;
+  if (state.perPerson) p = p / Math.max(1, tour.adults + (tour.kids || 0));
+  return p;
 }
 
 function sleep(ms) {
@@ -156,7 +196,7 @@ function buildTrace(params) {
       NIGHTS_FROM: Number(params.nights),
       NIGHTS_TILL: Number(params.nights),
       ADULT: Number(params.adults),
-      CHILD: 0,
+      CHILD: Number(params.kids || 0),
       FILTER: 0,
     },
   };
@@ -192,16 +232,18 @@ function mockSearch(params) {
     );
     if (filtered.length) hotels = filtered;
   }
-  // несколько операторов на часть отелей — как в реальной выдаче
+  const adults = Number(params.adults);
+  const kids = Number(params.kids || 0);
   const rows = [];
   hotels.forEach((h, i) => {
     const opCount = 1 + (i % 3 === 0 ? 1 : 0);
     for (let o = 0; o < opCount; o++) {
       const base = 72000 + i * 14800 + o * 9200 + Number(params.nights) * 3900 + h.stars * 4200;
-      const adults = Number(params.adults);
-      const price = Math.round(base * (adults / 2) * (0.95 + ((i * 17 + o * 9) % 10) / 100));
+      const peopleFactor = (adults + kids * 0.7) / 2;
+      const price = Math.round(base * peopleFactor * (0.95 + ((i * 17 + o * 9) % 10) / 100));
+      const flights = makeFlights(town.code, dest.iata, params.dateFrom, params.nights);
       rows.push({
-        id: `T-${params.to}-${i}-${o}`,
+        id: `T-${params.to}-${i}-${o}-${params.dateFrom}`,
         hotel: h.name,
         stars: h.stars,
         meal: h.meal,
@@ -215,33 +257,32 @@ function mockSearch(params) {
         nights: Number(params.nights),
         dateFrom: params.dateFrom,
         adults,
+        kids,
         operator: OPS[(i + o) % OPS.length],
         price,
         oldPrice: o === 1 ? Math.round(price * 1.08) : null,
         room: o === 0 ? "Standard Room" : "Deluxe Sea View",
         services: ["перелёт", "проживание", h.meal, "мед. страховка"],
-        flights: makeFlights(town.code, dest.iata, params.dateFrom, params.nights),
+        flights,
+        hasDirect: flights.some((f) => f.note === "прямой"),
+        opCommission: 6 + ((i + o) % 5),
       });
     }
   });
   return rows;
 }
 
-function displayPrice(tour) {
-  return state.perPerson ? tour.price / tour.adults : tour.price;
-}
-
 function currentPrice(tour) {
   const flight = tour.flights[state.flightIdx] || tour.flights[0];
   let total = tour.price + flight.delta;
-  if (state.extras.transfer) total += 4500 * tour.adults;
-  if (state.extras.insurance) total += 1900 * tour.adults;
+  if (state.extras.transfer) total += 4500 * (tour.adults + (tour.kids || 0));
+  if (state.extras.insurance) total += 1900 * (tour.adults + (tour.kids || 0));
   if (state.extras.visa) total += 7800 * tour.adults;
   return total;
 }
 
 function showView(name) {
-  ["search", "detail", "book", "order", "desk", "compare"].forEach((v) => {
+  ["search", "detail", "book", "order", "desk", "compare", "favs"].forEach((v) => {
     const el = document.getElementById(`view-${v}`);
     if (el) el.hidden = v !== name;
   });
@@ -252,6 +293,7 @@ function showView(name) {
     order: "sever.travel / order",
     desk: "sever.travel / desk",
     compare: "sever.travel / compare",
+    favs: "sever.travel / favorites",
   };
   document.getElementById("chromeUrl").textContent = map[name];
   document.getElementById("product").scrollIntoView({ behavior: "smooth", block: "start" });
@@ -403,11 +445,13 @@ function renderSuggests() {
 function filteredResults() {
   let items = [...state.results];
   if (state.meal !== "all") items = items.filter((t) => t.meal === state.meal);
-  if (state.sort === "price") items.sort((a, b) => a.price - b.price);
-  if (state.sort === "price-desc") items.sort((a, b) => b.price - a.price);
+  if (state.directOnly) items = items.filter((t) => t.hasDirect);
+  if (state.sort === "price") items.sort((a, b) => displayPrice(a) - displayPrice(b));
+  if (state.sort === "price-desc") items.sort((a, b) => displayPrice(b) - displayPrice(a));
   if (state.sort === "stars") items.sort((a, b) => b.stars - a.stars || a.price - b.price);
   if (state.sort === "ops") items.sort((a, b) => a.operator.localeCompare(b.operator, "ru") || a.price - b.price);
   if (state.sort === "rating") items.sort((a, b) => b.rating - a.rating || a.price - b.price);
+  if (state.sort === "commission") items.sort((a, b) => agentFee(b) - agentFee(a));
   return items;
 }
 
@@ -415,7 +459,13 @@ function cardHtml(t, idx) {
   const fav = state.favs.has(t.id);
   const compared = state.compare.includes(t.id);
   const price = displayPrice(t);
-  const priceNote = state.perPerson ? "с человека" : "за номер";
+  const priceNote = state.showNet
+    ? state.perPerson
+      ? "нетто / чел."
+      : "нетто агента"
+    : state.perPerson
+      ? "с человека"
+      : "за номер";
   return `
     <article class="offer" style="animation-delay:${idx * 0.03}s">
       <div class="offer-body">
@@ -433,16 +483,18 @@ function cardHtml(t, idx) {
           <span>${t.nights} ночей</span>
           <span class="dot-sep">·</span>
           <span>${formatDate(t.dateFrom)}</span>
+          ${t.kids ? `<span class="dot-sep">·</span><span>${t.adults}+${t.kids} чел.</span>` : ""}
         </div>
         <div class="offer-tags">
           <span class="tag meal">${t.meal}</span>
           <span class="tag">${t.operator}</span>
           <span class="tag ghost">${t.room}</span>
-          <span class="tag ghost">${t.flights[0].note}</span>
+          <span class="tag ghost">${t.hasDirect ? "прямой" : "с пересадкой"}</span>
+          <span class="tag fee">комиссия ${rub(agentFee(t))}</span>
         </div>
       </div>
       <div class="offer-side">
-        ${t.oldPrice ? `<span class="old">${rub(state.perPerson ? t.oldPrice / t.adults : t.oldPrice)}</span>` : ""}
+        ${t.oldPrice ? `<span class="old">${rub(state.perPerson ? t.oldPrice / peopleCount({ adults: t.adults, kids: t.kids }) : t.oldPrice)}</span>` : ""}
         <div class="offer-price">${rub(price)}</div>
         <div class="offer-note">${priceNote}</div>
         <div class="offer-actions">
@@ -462,13 +514,15 @@ function renderResults() {
   const items = filteredResults();
   const root = document.getElementById("results");
   const p = state.params;
+  if (!p) return;
   const town = TOWNS.find((t) => t.id === Number(p.from));
   document.getElementById("toolbar").hidden = false;
   document.getElementById("boardTitle").textContent = `${items.length} предложений`;
-  document.getElementById("boardMeta").textContent = `${town.name} → ${DEST[p.to].name} · ${p.nights} ночей · ${p.adults} взр.`;
+  const kidsLabel = Number(p.kids) > 0 ? ` · ${p.kids} дет.` : "";
+  document.getElementById("boardMeta").textContent = `${town.name} → ${DEST[p.to].name} · ${p.nights} ночей · ${p.adults} взр.${kidsLabel}`;
 
   if (!items.length) {
-    root.innerHTML = '<div class="hint">Пусто по фильтру — нажми «Все»</div>';
+    root.innerHTML = '<div class="hint">Пусто по фильтру — сбрось питание / «только прямые»</div>';
     renderCompareBar();
     return;
   }
@@ -495,6 +549,11 @@ function renderResults() {
     root.innerHTML = `<div class="offer-list">${items.map((t, i) => cardHtml(t, i)).join("")}</div>`;
   }
 
+  bindOfferActions(root);
+  renderCompareBar();
+}
+
+function bindOfferActions(root) {
   root.querySelectorAll("[data-open]").forEach((btn) => btn.addEventListener("click", () => openDetail(btn.dataset.open)));
   root.querySelectorAll("[data-fav]").forEach((btn) =>
     btn.addEventListener("click", (e) => {
@@ -508,7 +567,144 @@ function renderResults() {
       toggleCompare(btn.dataset.compare);
     })
   );
-  renderCompareBar();
+}
+
+function renderFlexDates() {
+  const box = document.getElementById("flexDates");
+  if (!state.params) {
+    box.hidden = true;
+    return;
+  }
+  box.hidden = false;
+  const base = state.params.baseDate || state.params.dateFrom;
+  box.innerHTML =
+    `<span class="control-label">Гибкие даты</span><div class="flex-row">` +
+    [-2, -1, 0, 1, 2]
+      .map((off) => {
+        const d = shiftDate(base, off);
+        const on = state.dateOffset === off ? "is-on" : "";
+        return `<button type="button" class="flex-btn ${on}" data-offset="${off}">${formatDate(d)}${off === 0 ? "" : off > 0 ? ` +${off}` : ` ${off}`}</button>`;
+      })
+      .join("") +
+    `</div>`;
+  box.querySelectorAll("[data-offset]").forEach((btn) => {
+    btn.addEventListener("click", async () => {
+      state.dateOffset = Number(btn.dataset.offset);
+      state.params.dateFrom = shiftDate(base, state.dateOffset);
+      document.querySelector('[name="dateFrom"]').value = state.params.dateFrom;
+      document.getElementById("results").innerHTML = skeletonHtml();
+      await sleep(350);
+      state.results = mockSearch(state.params);
+      renderFlexDates();
+      renderResults();
+    });
+  });
+}
+
+function renderHistory() {
+  const box = document.getElementById("historyRow");
+  if (!state.history.length) {
+    box.hidden = true;
+    return;
+  }
+  box.hidden = false;
+  box.innerHTML =
+    `<span class="control-label">Недавние</span><div class="history-links">` +
+    state.history
+      .map(
+        (h) =>
+          `<button type="button" class="suggest" data-hist='${JSON.stringify(h)}'>${h.label}</button>`
+      )
+      .join("") +
+    `</div>`;
+  box.querySelectorAll("[data-hist]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const h = JSON.parse(btn.dataset.hist);
+      setFrom(Number(h.from));
+      setTo(Number(h.to), h.toLabel, h.hotelHint || "");
+      document.querySelector('[name="dateFrom"]').value = h.dateFrom;
+      document.getElementById("nightsVal").value = h.nights;
+      document.getElementById("adultsVal").value = h.adults;
+      document.getElementById("kidsVal").value = h.kids || 0;
+      syncKidsAges();
+      document.getElementById("searchForm").requestSubmit();
+    });
+  });
+}
+
+function skeletonHtml() {
+  return `<div class="skel-list">${[1, 2, 3, 4]
+    .map(
+      () => `<div class="skel-card"><div class="skel-line w60"></div><div class="skel-line w40"></div><div class="skel-line w80"></div></div>`
+    )
+    .join("")}</div>`;
+}
+
+function syncKidsAges() {
+  const n = Number(document.getElementById("kidsVal").value);
+  const box = document.getElementById("kidsAges");
+  if (!n) {
+    box.hidden = true;
+    box.innerHTML = "";
+    return;
+  }
+  box.hidden = false;
+  box.innerHTML =
+    `<span class="control-label">Возраст детей</span><div class="ages-row">` +
+    Array.from({ length: n }, (_, i) => {
+      const val = box.querySelector(`[name="kidAge${i}"]`)?.value || "7";
+      return `<label>Ребёнок ${i + 1}
+        <select name="kidAge${i}">${[2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14]
+          .map((a) => `<option value="${a}" ${String(a) === String(val) ? "selected" : ""}>${a} лет</option>`)
+          .join("")}</select>
+      </label>`;
+    }).join("") +
+    `</div>`;
+}
+
+function downloadQuote(tour) {
+  const price = currentPrice(tour);
+  const text = [
+    "Коммерческое предложение · Север",
+    "================================",
+    `Отель: ${tour.hotel}`,
+    `Курорт: ${tour.resort}, ${tour.country}`,
+    `Даты: ${formatDate(tour.dateFrom)}, ${tour.nights} ночей`,
+    `Туристы: ${tour.adults} взр.${tour.kids ? ` + ${tour.kids} дет.` : ""}`,
+    `Питание: ${tour.meal}`,
+    `Оператор: ${tour.operator}`,
+    `Рейс: ${tour.flights[state.flightIdx].airline} · ${tour.flights[state.flightIdx].note}`,
+    `Цена брутто: ${rub(price)}`,
+    `Нетто (${state.commission}%): ${rub(Math.round(price * (1 - state.commission / 100)))}`,
+    `Комиссия: ${rub(Math.round(price * (state.commission / 100)))}`,
+    "",
+    "Демо-КП. На проде формируется из ответа Andromeda.",
+  ].join("\n");
+  const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = `KP-${tour.hotel.replace(/\s+/g, "-").slice(0, 24)}.txt`;
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+function renderFavs() {
+  showView("favs");
+  const box = document.getElementById("view-favs");
+  const items = state.results.filter((t) => state.favs.has(t.id));
+  if (!items.length) {
+    box.innerHTML = `
+      <button type="button" class="back" id="favBack">← к поиску</button>
+      <div class="hint">В избранном пусто — отметь отели звёздочкой в выдаче</div>`;
+    box.querySelector("#favBack").addEventListener("click", () => showView("search"));
+    return;
+  }
+  box.innerHTML = `
+    <button type="button" class="back" id="favBack">← к поиску</button>
+    <div class="desk-head"><h2>Избранное</h2><p class="muted">${items.length} туров</p></div>
+    <div class="offer-list">${items.map((t, i) => cardHtml(t, i)).join("")}</div>`;
+  box.querySelector("#favBack").addEventListener("click", () => showView("search"));
+  bindOfferActions(box);
 }
 
 function toggleFav(id) {
@@ -652,8 +848,10 @@ function renderDetail() {
         </div>
         <div class="detail-actions">
           <button type="button" class="ghost-btn" id="reprice">Ещё раз актуализировать</button>
+          <button type="button" class="ghost-btn" id="quoteBtn">Скачать КП</button>
           <button type="button" class="go" id="toBook">Забронировать · ${rub(price)}</button>
         </div>
+        <p class="muted fee-line">Брутто ${rub(price)} · нетто ${rub(Math.round(price * (1 - state.commission / 100)))} · комиссия ${state.commission}% = ${rub(Math.round(price * (state.commission / 100)))}</p>
       </div>
     </div>`;
 
@@ -671,6 +869,7 @@ function renderDetail() {
     });
   });
   box.querySelector("#toBook").addEventListener("click", renderBook);
+  box.querySelector("#quoteBtn").addEventListener("click", () => downloadQuote(t));
   box.querySelector("#reprice").addEventListener("click", async () => {
     state.quotedPrice = t.price;
     await sleep(350);
@@ -777,12 +976,25 @@ async function submitBook(e) {
 function renderOrder(order) {
   showView("order");
   const box = document.getElementById("view-order");
+  const steps = [
+    { key: "sent", label: "Отправлена в ТО", done: true },
+    { key: "awaiting", label: "Ожидает подтверждения", done: true },
+    { key: "confirmed", label: "Подтверждена", done: order.status === "confirmed" },
+    { key: "docs", label: "Документы готовы", done: order.status === "confirmed" },
+  ];
   box.innerHTML = `
     <button type="button" class="back" id="backSearch2">← к поиску</button>
     <div class="order">
       <p class="chip status-${order.status}">${order.statusLabel}</p>
       <h2>Заявка ${order.id}</h2>
       <p class="muted">${order.createdAt} · ${order.operator}</p>
+      <ol class="timeline">
+        ${steps
+          .map(
+            (s) => `<li class="${s.done ? "is-done" : ""}"><span></span><div><strong>${s.label}</strong></div></li>`
+          )
+          .join("")}
+      </ol>
       <div class="order-grid">
         <div>
           <h3>Тур</h3>
@@ -804,10 +1016,23 @@ function renderOrder(order) {
         <div class="doc-row"><span>Памятка</span><span class="muted">${order.status === "confirmed" ? "готов" : "ожидает"}</span></div>
         <div class="doc-row"><span>Страховка</span><span class="muted">${order.status === "confirmed" ? "готов" : "ожидает"}</span></div>
       </div>
-      <button type="button" class="ghost-btn" id="toDesk" style="margin-top:1rem">Открыть кабинет</button>
+      <div class="detail-actions" style="margin-top:1rem">
+        ${order.status === "confirmed" ? `<button type="button" class="ghost-btn" id="dlDocs">Скачать пакет документов</button>` : ""}
+        <button type="button" class="ghost-btn" id="toDesk">Открыть кабинет</button>
+      </div>
     </div>`;
   box.querySelector("#backSearch2").addEventListener("click", () => showView("search"));
   box.querySelector("#toDesk").addEventListener("click", renderDesk);
+  box.querySelector("#dlDocs")?.addEventListener("click", () => {
+    const blob = new Blob(
+      [`Пакет документов по заявке ${order.id}\nВаучер, памятка, страховка — демо-файлы.\n`],
+      { type: "text/plain;charset=utf-8" }
+    );
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = `${order.id}-docs.txt`;
+    a.click();
+  });
 }
 
 function renderDesk() {
@@ -875,10 +1100,13 @@ function renderDesk() {
 document.querySelectorAll("[data-step]").forEach((btn) => {
   btn.addEventListener("click", () => {
     const key = btn.dataset.step;
-    const input = document.getElementById(key === "nights" ? "nightsVal" : "adultsVal");
-    const min = key === "nights" ? 5 : 1;
-    const max = key === "nights" ? 21 : 4;
-    input.value = Math.max(min, Math.min(max, Number(input.value) + Number(btn.dataset.dir)));
+    const map = { nights: "nightsVal", adults: "adultsVal", kids: "kidsVal" };
+    const input = document.getElementById(map[key]);
+    const min = key === "nights" ? 5 : 0;
+    const max = key === "nights" ? 21 : key === "kids" ? 3 : 4;
+    const floor = key === "adults" ? 1 : min;
+    input.value = Math.max(floor, Math.min(max, Number(input.value) + Number(btn.dataset.dir)));
+    if (key === "kids") syncKidsAges();
   });
 });
 
@@ -896,14 +1124,17 @@ document.getElementById("sortChips").addEventListener("click", (e) => {
   if (btn.dataset.sort === "group") {
     state.groupByResort = !state.groupByResort;
     btn.classList.toggle("is-on", state.groupByResort);
-    if (state.results.length) renderResults();
-    return;
-  }
-  if (btn.dataset.sort === "pp") {
+  } else if (btn.dataset.sort === "pp") {
     state.perPerson = !state.perPerson;
     btn.classList.toggle("is-on", state.perPerson);
-    if (state.results.length) renderResults();
+  } else if (btn.dataset.sort === "direct") {
+    state.directOnly = !state.directOnly;
+    btn.classList.toggle("is-on", state.directOnly);
+  } else if (btn.dataset.sort === "net") {
+    state.showNet = !state.showNet;
+    btn.classList.toggle("is-on", state.showNet);
   }
+  if (state.results.length) renderResults();
 });
 
 document.getElementById("sortTabs").addEventListener("click", (e) => {
@@ -911,6 +1142,12 @@ document.getElementById("sortTabs").addEventListener("click", (e) => {
   if (!btn) return;
   state.sort = btn.dataset.sort;
   document.querySelectorAll("#sortTabs .tab").forEach((b) => b.classList.toggle("is-on", b === btn));
+  if (state.results.length) renderResults();
+});
+
+document.getElementById("commissionRange").addEventListener("input", (e) => {
+  state.commission = Number(e.target.value);
+  document.getElementById("commissionLabel").textContent = `${state.commission}%`;
   if (state.results.length) renderResults();
 });
 
@@ -927,22 +1164,43 @@ document.getElementById("searchForm").addEventListener("submit", async (e) => {
     to,
     hotelHint: document.getElementById("hotelHint").value,
     dateFrom: e.target.dateFrom.value,
+    baseDate: e.target.dateFrom.value,
     nights: e.target.nights.value,
     adults: e.target.adults.value,
+    kids: e.target.kids.value,
   };
   state.params = params;
+  state.dateOffset = 0;
   state.compare = [];
   showView("search");
-  document.getElementById("results").innerHTML = '<div class="wait">Ищем по справочникам и базам ТО…</div>';
+  document.getElementById("results").innerHTML = skeletonHtml();
   document.getElementById("toolbar").hidden = true;
   document.getElementById("sampleTrace").textContent = JSON.stringify(buildTrace(params), null, 2);
+
+  const town = TOWNS.find((t) => t.id === Number(from));
+  const dest = DEST[to];
+  saveHistory({
+    key: `${from}-${to}-${params.hotelHint}`,
+    label: `${town.name} → ${params.hotelHint || dest.name}`,
+    from: Number(from),
+    to: Number(to),
+    toLabel: params.hotelHint || dest.name,
+    hotelHint: params.hotelHint,
+    dateFrom: params.dateFrom,
+    nights: params.nights,
+    adults: params.adults,
+    kids: params.kids,
+  });
+
   await sleep(420 + Math.random() * 380);
   state.results = mockSearch(params);
+  renderFlexDates();
   renderResults();
 });
 
 document.getElementById("navSearch").addEventListener("click", () => showView("search"));
 document.getElementById("navDesk").addEventListener("click", renderDesk);
+document.getElementById("navFavs").addEventListener("click", renderFavs);
 
 window.addEventListener("scroll", () => {
   document.querySelector(".bar").classList.toggle("is-solid", window.scrollY > 8);
@@ -966,8 +1224,9 @@ setDefaultDate();
 setFrom(1);
 setTo(15, "Турция");
 renderSuggests();
+renderHistory();
 document.getElementById("sampleTrace").textContent = JSON.stringify(
-  buildTrace({ from: "1", to: "15", dateFrom: document.querySelector('[name="dateFrom"]').value, nights: "10", adults: "2" }),
+  buildTrace({ from: "1", to: "15", dateFrom: document.querySelector('[name="dateFrom"]').value, nights: "10", adults: "2", kids: "0" }),
   null,
   2
 );
