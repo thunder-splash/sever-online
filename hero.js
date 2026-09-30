@@ -127,26 +127,4 @@
       card.style.zIndex = String(10 + i);
     });
   });
-
-  // scroll reveals for sections
-  const toReveal = document.querySelectorAll(
-    ".seg-card, .cap-grid article, .contact-shell, .section-head"
-  );
-  if ("IntersectionObserver" in window) {
-    const io = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (!entry.isIntersecting) return;
-          entry.target.classList.add("in-view");
-          io.unobserve(entry.target);
-        });
-      },
-      { threshold: 0.12 }
-    );
-    toReveal.forEach((el, i) => {
-      el.classList.add("will-reveal");
-      el.style.setProperty("--delay", `${(i % 3) * 0.07}s`);
-      io.observe(el);
-    });
-  }
 })();

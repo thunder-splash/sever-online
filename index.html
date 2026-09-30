@@ -14,6 +14,8 @@
   <link rel="stylesheet" href="layout.css" />
 </head>
 <body>
+  <div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
+
   <header class="bar">
     <a class="mark" href="#top">
       <img class="mark-icon" src="./favicon.svg" width="28" height="28" alt="" />
@@ -132,16 +134,41 @@
     </section>
 
     <section id="product" class="product-section">
-      <div class="section-head invert">
+      <div class="product-scan" aria-hidden="true"></div>
+      <div class="section-head invert product-head">
         <p class="kicker">Интерактив</p>
         <h2>Попробуйте воронку сами</h2>
         <p>Поиск → фильтры → тур → бронь → кабинет. Данные демонстрационные.</p>
+        <ol class="funnel-track" id="funnelTrack" aria-label="Шаги воронки">
+          <li data-step="search" class="is-on">Поиск</li>
+          <li data-step="offers">Оффер</li>
+          <li data-step="book">Бронь</li>
+          <li data-step="desk">Кабинет</li>
+        </ol>
       </div>
 
-      <div class="product-shell">
+      <div class="api-marquee" aria-hidden="true">
+        <div class="api-marquee-track">
+          <span>GET_PRICE_FOR_AGENT</span>
+          <span>GET_STATE</span>
+          <span>GET_TOWNFROM</span>
+          <span>GET_HOTEL</span>
+          <span>CREATE_CLAIM</span>
+          <span>GET_CLAIM</span>
+          <span>GET_PRICE_FOR_AGENT</span>
+          <span>GET_STATE</span>
+          <span>GET_TOWNFROM</span>
+          <span>GET_HOTEL</span>
+          <span>CREATE_CLAIM</span>
+          <span>GET_CLAIM</span>
+        </div>
+      </div>
+
+      <div class="product-shell" id="productShell">
         <div class="product-chrome">
           <span class="dot"></span><span class="dot"></span><span class="dot"></span>
           <span class="url" id="chromeUrl">sever.travel / search</span>
+          <span class="live-dot">live mock</span>
         </div>
 
         <div class="app" id="app">
@@ -244,11 +271,16 @@
                   </div>
                 </div>
               </div>
-              <div class="commission-bar">
-                <label>Комиссия агента
-                  <input type="range" id="commissionRange" min="0" max="18" step="0.5" value="8" />
-                </label>
-                <strong id="commissionLabel">8%</strong>
+              <div class="fee-row">
+                <span class="control-label">Комиссия агента</span>
+                <div class="fee-seg" id="commissionSeg" role="group">
+                  <button type="button" data-fee="0">0%</button>
+                  <button type="button" data-fee="5">5%</button>
+                  <button type="button" data-fee="8" class="is-on">8%</button>
+                  <button type="button" data-fee="10">10%</button>
+                  <button type="button" data-fee="12">12%</button>
+                  <button type="button" data-fee="15">15%</button>
+                </div>
               </div>
             </div>
             <div class="list" id="results" aria-live="polite"></div>
@@ -350,5 +382,6 @@
 
   <script src="app.js"></script>
   <script src="hero.js"></script>
+  <script src="motion.js"></script>
 </body>
 </html>

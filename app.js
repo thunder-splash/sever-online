@@ -281,7 +281,7 @@ function currentPrice(tour) {
   return total;
 }
 
-function showView(name) {
+function showView(name, opts = {}) {
   ["search", "detail", "book", "order", "desk", "compare", "favs"].forEach((v) => {
     const el = document.getElementById(`view-${v}`);
     if (el) el.hidden = v !== name;
@@ -296,7 +296,22 @@ function showView(name) {
     favs: "sever.travel / favorites",
   };
   document.getElementById("chromeUrl").textContent = map[name];
-  document.getElementById("product").scrollIntoView({ behavior: "smooth", block: "start" });
+  const funnelMap = {
+    search: "search",
+    detail: "offers",
+    compare: "offers",
+    favs: "offers",
+    book: "book",
+    order: "book",
+    desk: "desk",
+  };
+  const step = funnelMap[name] || "search";
+  document.querySelectorAll("#funnelTrack li").forEach((li) => {
+    li.classList.toggle("is-on", li.dataset.step === step);
+  });
+  if (opts.scroll !== false) {
+    document.getElementById("product").scrollIntoView({ behavior: "smooth", block: "start" });
+  }
   renderCompareBar();
 }
 
@@ -518,6 +533,9 @@ function renderResults() {
   const town = TOWNS.find((t) => t.id === Number(p.from));
   document.getElementById("toolbar").hidden = false;
   document.getElementById("boardTitle").textContent = `${items.length} предложений`;
+  document.querySelectorAll("#funnelTrack li").forEach((li) => {
+    li.classList.toggle("is-on", li.dataset.step === "offers");
+  });
   const kidsLabel = Number(p.kids) > 0 ? ` · ${p.kids} дет.` : "";
   document.getElementById("boardMeta").textContent = `${town.name} → ${DEST[p.to].name} · ${p.nights} ночей · ${p.adults} взр.${kidsLabel}`;
 
@@ -1145,9 +1163,13 @@ document.getElementById("sortTabs").addEventListener("click", (e) => {
   if (state.results.length) renderResults();
 });
 
-document.getElementById("commissionRange").addEventListener("input", (e) => {
-  state.commission = Number(e.target.value);
-  document.getElementById("commissionLabel").textContent = `${state.commission}%`;
+document.getElementById("commissionSeg")?.addEventListener("click", (e) => {
+  const btn = e.target.closest("[data-fee]");
+  if (!btn) return;
+  state.commission = Number(btn.dataset.fee);
+  document.querySelectorAll("#commissionSeg [data-fee]").forEach((b) => {
+    b.classList.toggle("is-on", b === btn);
+  });
   if (state.results.length) renderResults();
 });
 
@@ -1156,7 +1178,8 @@ document.getElementById("searchForm").addEventListener("submit", async (e) => {
   const from = document.getElementById("fromId").value;
   const to = document.getElementById("toId").value;
   if (!from || !to) {
-    document.getElementById("results").innerHTML = '<div class="hint">Выбери город и направление из подсказок</div>';
+    document.getElementById("results").innerHTML =
+      '<div class="hint">Выбери город и направление из подсказок</div>';
     return;
   }
   const params = {
@@ -1172,32 +1195,40 @@ document.getElementById("searchForm").addEventListener("submit", async (e) => {
   state.params = params;
   state.dateOffset = 0;
   state.compare = [];
-  showView("search");
+  showView("search", { scroll: false });
   document.getElementById("results").innerHTML = skeletonHtml();
   document.getElementById("toolbar").hidden = true;
-  document.getElementById("sampleTrace").textContent = JSON.stringify(buildTrace(params), null, 2);
 
   const town = TOWNS.find((t) => t.id === Number(from));
   const dest = DEST[to];
-  saveHistory({
-    key: `${from}-${to}-${params.hotelHint}`,
-    label: `${town.name} → ${params.hotelHint || dest.name}`,
-    from: Number(from),
-    to: Number(to),
-    toLabel: params.hotelHint || dest.name,
-    hotelHint: params.hotelHint,
-    dateFrom: params.dateFrom,
-    nights: params.nights,
-    adults: params.adults,
-    kids: params.kids,
-  });
+  if (town && dest) {
+    saveHistory({
+      key: `${from}-${to}-${params.hotelHint}`,
+      label: `${town.name} → ${params.hotelHint || dest.name}`,
+      from: Number(from),
+      to: Number(to),
+      toLabel: params.hotelHint || dest.name,
+      hotelHint: params.hotelHint,
+      dateFrom: params.dateFrom,
+      nights: params.nights,
+      adults: params.adults,
+      kids: params.kids,
+    });
+  }
 
-  await sleep(420 + Math.random() * 380);
-  state.results = mockSearch(params);
-  renderFlexDates();
-  renderResults();
+  try {
+    await sleep(420 + Math.random() * 380);
+    state.results = mockSearch(params);
+    renderFlexDates();
+    renderHistory();
+    renderResults();
+  } catch (err) {
+    console.error(err);
+    document.getElementById("results").innerHTML =
+      '<div class="hint">Не удалось собрать выдачу — нажми «Найти» ещё раз</div>';
+    document.getElementById("toolbar").hidden = false;
+  }
 });
-
 document.getElementById("navSearch").addEventListener("click", () => showView("search"));
 document.getElementById("navDesk").addEventListener("click", renderDesk);
 document.getElementById("navFavs").addEventListener("click", renderFavs);
@@ -1240,9 +1271,4 @@ setFrom(1);
 setTo(15, "Турция");
 renderSuggests();
 renderHistory();
-document.getElementById("sampleTrace").textContent = JSON.stringify(
-  buildTrace({ from: "1", to: "15", dateFrom: document.querySelector('[name="dateFrom"]').value, nights: "10", adults: "2", kids: "0" }),
-  null,
-  2
-);
 document.getElementById("searchForm").requestSubmit();
