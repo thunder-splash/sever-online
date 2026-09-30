@@ -168,6 +168,74 @@ function rub(n) {
   return new Intl.NumberFormat("ru-RU").format(Math.round(n)) + " ₽";
 }
 
+function toast(message) {
+  const host = document.getElementById("toastHost");
+  if (!host) return;
+  const el = document.createElement("div");
+  el.className = "toast";
+  el.textContent = message;
+  host.appendChild(el);
+  setTimeout(() => {
+    el.classList.add("is-out");
+    setTimeout(() => el.remove(), 260);
+  }, 2200);
+}
+
+function copyText(text, okMsg) {
+  const done = () => toast(okMsg || "Скопировано");
+  if (navigator.clipboard?.writeText) {
+    navigator.clipboard.writeText(text).then(done).catch(() => fallbackCopy(text, done));
+  } else {
+    fallbackCopy(text, done);
+  }
+}
+
+function fallbackCopy(text, done) {
+  const ta = document.createElement("textarea");
+  ta.value = text;
+  ta.setAttribute("readonly", "");
+  ta.style.position = "fixed";
+  ta.style.left = "-9999px";
+  document.body.appendChild(ta);
+  ta.select();
+  try {
+    document.execCommand("copy");
+    done();
+  } catch {
+    toast("Не удалось скопировать");
+  }
+  ta.remove();
+}
+
+function tourSummary(t, price) {
+  const flight = t.flights[state.flightIdx] || t.flights[0];
+  const total = price ?? currentPrice(t);
+  return [
+    `Север · сводка тура`,
+    `${t.hotel} · ${t.stars}* · ${t.meal}`,
+    `${t.resort}, ${t.country}`,
+    `${t.from} → ${t.toCode} · ${formatDate(t.dateFrom)} · ${t.nights} ночей`,
+    `Рейс: ${flight.airline} · ${flight.note}`,
+    `${flight.outbound}`,
+    `Цена: ${rub(total)} (комиссия агента ${state.commission}% / нетто ${rub(Math.round(total * (1 - state.commission / 100)))})`,
+    `Оператор: ${t.operator}`,
+  ].join("\n");
+}
+
+function orderSummary(order) {
+  return [
+    `Север · заявка ${order.id}`,
+    `Статус: ${order.statusLabel}`,
+    `${order.tour}`,
+    `${order.route}`,
+    `Рейс: ${order.flight.airline}`,
+    `${order.flight.outbound}`,
+    `Туристы: ${order.tourists.map((x) => x.name).join(", ")}`,
+    `Сумма: ${rub(order.price)}`,
+    `Оператор: ${order.operator}`,
+  ].join("\n");
+}
+
 function uid() {
   return "SV-" + Math.floor(100000 + Math.random() * 899999);
 }
@@ -726,15 +794,28 @@ function renderFavs() {
 }
 
 function toggleFav(id) {
-  if (state.favs.has(id)) state.favs.delete(id);
-  else state.favs.add(id);
+  if (state.favs.has(id)) {
+    state.favs.delete(id);
+    toast("Убрано из избранного");
+  } else {
+    state.favs.add(id);
+    toast("В избранном");
+  }
   saveFavs();
   renderResults();
 }
 
 function toggleCompare(id) {
-  if (state.compare.includes(id)) state.compare = state.compare.filter((x) => x !== id);
-  else if (state.compare.length < 3) state.compare.push(id);
+  if (state.compare.includes(id)) {
+    state.compare = state.compare.filter((x) => x !== id);
+    toast("Убрано из сравнения");
+  } else if (state.compare.length < 3) {
+    state.compare.push(id);
+    toast(`В сравнении · ${state.compare.length}/3`);
+  } else {
+    toast("Максимум 3 тура в сравнении");
+    return;
+  }
   renderResults();
 }
 
@@ -765,6 +846,7 @@ function renderCompareBar() {
   bar.querySelector("#openCompare").addEventListener("click", renderCompare);
   bar.querySelector("#clearCompare").addEventListener("click", () => {
     state.compare = [];
+    toast("Сравнение сброшено");
     renderResults();
   });
 }
@@ -866,6 +948,7 @@ function renderDetail() {
         </div>
         <div class="detail-actions">
           <button type="button" class="ghost-btn" id="reprice">Ещё раз актуализировать</button>
+          <button type="button" class="ghost-btn" id="copySummary">Скопировать сводку</button>
           <button type="button" class="ghost-btn" id="quoteBtn">Скачать КП</button>
           <button type="button" class="go" id="toBook">Забронировать · ${rub(price)}</button>
         </div>
@@ -888,6 +971,9 @@ function renderDetail() {
   });
   box.querySelector("#toBook").addEventListener("click", renderBook);
   box.querySelector("#quoteBtn").addEventListener("click", () => downloadQuote(t));
+  box.querySelector("#copySummary").addEventListener("click", () => {
+    copyText(tourSummary(t, price), "Сводка скопирована");
+  });
   box.querySelector("#reprice").addEventListener("click", async () => {
     state.quotedPrice = t.price;
     await sleep(350);
@@ -1035,12 +1121,16 @@ function renderOrder(order) {
         <div class="doc-row"><span>Страховка</span><span class="muted">${order.status === "confirmed" ? "готов" : "ожидает"}</span></div>
       </div>
       <div class="detail-actions" style="margin-top:1rem">
+        <button type="button" class="ghost-btn" id="copyOrder">Скопировать сводку</button>
         ${order.status === "confirmed" ? `<button type="button" class="ghost-btn" id="dlDocs">Скачать пакет документов</button>` : ""}
         <button type="button" class="ghost-btn" id="toDesk">Открыть кабинет</button>
       </div>
     </div>`;
   box.querySelector("#backSearch2").addEventListener("click", () => showView("search"));
   box.querySelector("#toDesk").addEventListener("click", renderDesk);
+  box.querySelector("#copyOrder").addEventListener("click", () => {
+    copyText(orderSummary(order), "Сводка заявки скопирована");
+  });
   box.querySelector("#dlDocs")?.addEventListener("click", () => {
     const blob = new Blob(
       [`Пакет документов по заявке ${order.id}\nВаучер, памятка, страховка — демо-файлы.\n`],
