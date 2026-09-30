@@ -1202,6 +1202,21 @@ document.getElementById("navSearch").addEventListener("click", () => showView("s
 document.getElementById("navDesk").addEventListener("click", renderDesk);
 document.getElementById("navFavs").addEventListener("click", renderFavs);
 
+document.getElementById("contactForm").addEventListener("submit", (e) => {
+  e.preventDefault();
+  const fd = new FormData(e.target);
+  const payload = Object.fromEntries(fd.entries());
+  const note = document.getElementById("contactNote");
+  note.textContent = `Спасибо, ${payload.name}! Заявка сохранена — менеджер свяжется по ${payload.contact}.`;
+  note.classList.add("ok");
+  e.target.reset();
+  try {
+    const leads = JSON.parse(localStorage.getItem("sever-leads") || "[]");
+    leads.unshift({ ...payload, at: new Date().toISOString() });
+    localStorage.setItem("sever-leads", JSON.stringify(leads.slice(0, 30)));
+  } catch {}
+});
+
 window.addEventListener("scroll", () => {
   document.querySelector(".bar").classList.toggle("is-solid", window.scrollY > 8);
 });

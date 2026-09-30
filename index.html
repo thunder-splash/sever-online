@@ -3,38 +3,92 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Север — онлайн-поиск туров</title>
-  <meta name="description" content="Поиск и бронирование туров через Andromeda API / САМО" />
+  <title>Север — поиск туров через Andromeda</title>
+  <meta name="description" content="Онлайн-поиск и бронирование туров: Andromeda API, САМО, B2B-кабинет" />
   <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="./favicon.svg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Syne:wght@600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="layout.css" />
 </head>
 <body>
   <header class="bar">
-    <a class="mark" href="./">
+    <a class="mark" href="#top">
       <img class="mark-icon" src="./favicon.svg" width="28" height="28" alt="" />
       Север<span>.</span>
     </a>
-    <nav>
-      <a href="#product">Продукт</a>
-      <a href="#stack">Интеграция</a>
+    <nav class="nav">
+      <a href="#segments">Контур</a>
+      <a href="#product">Демо</a>
+      <a href="#capabilities">Возможности</a>
+      <a href="#contact" class="nav-cta">Связаться</a>
     </nav>
   </header>
 
-  <main>
-    <section class="intro">
-      <p class="kicker">Andromeda API · САМО</p>
-      <h1>Поиск → пакет → бронь<br />в одном контуре</h1>
-      <p class="lead">
-        B2C-витрина и B2B-кабинет: справочники, комиссия агента, гибкие даты,
-        сравнение, бронь и статусы заявки — как в боевой интеграции с Андромедой.
-      </p>
+  <main id="top">
+    <section class="hero">
+      <div class="hero-glow" aria-hidden="true"></div>
+      <div class="hero-copy">
+        <p class="kicker">Andromeda API · САМО-Тур</p>
+        <h1>Север<span>.</span></h1>
+        <p class="hero-lead">
+          Онлайн-поиск туров с живой логикой интеграции:
+          справочники, нетто/брутто, бронь и статусы заявок.
+        </p>
+        <div class="hero-actions">
+          <a class="btn primary" href="#product">Открыть демо</a>
+          <a class="btn soft" href="#contact">Связаться с менеджером</a>
+        </div>
+      </div>
+      <div class="hero-panel" aria-hidden="true">
+        <div class="float-card c1">
+          <small>Поиск</small>
+          <strong>GET_PRICE_FOR_AGENT</strong>
+        </div>
+        <div class="float-card c2">
+          <small>Комиссия</small>
+          <strong>8% · нетто</strong>
+        </div>
+        <div class="float-card c3">
+          <small>Заявка</small>
+          <strong>SV-482193</strong>
+        </div>
+      </div>
     </section>
 
-    <section id="product" class="product">
+    <section id="segments" class="segments">
+      <div class="section-head">
+        <p class="kicker">Сегменты</p>
+        <h2>Один контур — три роли</h2>
+      </div>
+      <div class="seg-grid">
+        <article class="seg-card tone-sea">
+          <span class="seg-num">01</span>
+          <h3>B2C-витрина</h3>
+          <p>Турист ищет тур, сравнивает пакеты, выбирает рейс и оставляет бронь.</p>
+        </article>
+        <article class="seg-card tone-sun">
+          <span class="seg-num">02</span>
+          <h3>B2B-кабинет</h3>
+          <p>Менеджер видит нетто, комиссию, статусы заявок и пакет документов.</p>
+        </article>
+        <article class="seg-card tone-mint">
+          <span class="seg-num">03</span>
+          <h3>Интеграция</h3>
+          <p>Прокси подписывает Andromeda, нормализует ответы ТО в единый UI.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="product" class="product-section">
+      <div class="section-head invert">
+        <p class="kicker">Интерактив</p>
+        <h2>Попробуйте воронку сами</h2>
+        <p>Поиск → фильтры → тур → бронь → кабинет. Данные демонстрационные.</p>
+      </div>
+
       <div class="product-shell">
         <div class="product-chrome">
           <span class="dot"></span><span class="dot"></span><span class="dot"></span>
@@ -161,31 +215,87 @@
       </div>
     </section>
 
-    <section id="stack" class="stack">
-      <div class="stack-grid">
-        <div>
-          <h2>Контур интеграции</h2>
-          <p>
-            На проде ключи на прокси. Здесь — полная продуктовая воронка
-            на демо-данных: от typeahead-справочников до статуса заявки.
-          </p>
-        </div>
-        <ul class="tech">
-          <li><strong>Справочники</strong><span>города / страны / курорты / отели как INC</span></li>
-          <li><strong>Поиск</strong><span><code>GET_PRICE_FOR_AGENT</code> → нормализованная выдача</span></li>
-          <li><strong>B2B</strong><span>комиссия · нетто/брутто · кабинет заявок</span></li>
-          <li><strong>Бронь</strong><span>рейсы · допуслуги · статусы · документы · КП</span></li>
-        </ul>
+    <section id="capabilities" class="capabilities">
+      <div class="section-head">
+        <p class="kicker">Возможности</p>
+        <h2>Что закрывает продукт</h2>
       </div>
-      <details class="ops">
-        <summary>Пример запроса поиска</summary>
-        <pre id="sampleTrace"></pre>
-      </details>
+      <div class="cap-grid">
+        <article>
+          <h3>Typeahead-справочники</h3>
+          <p>Города, страны, курорты и отели с INC — как в САМО.</p>
+        </article>
+        <article>
+          <h3>Гибкие даты</h3>
+          <p>±2 дня к вылету без нового ручного ввода формы.</p>
+        </article>
+        <article>
+          <h3>Нетто и комиссия</h3>
+          <p>B2B-режим для агентства: слайдер %, сортировка по марже.</p>
+        </article>
+        <article>
+          <h3>Пакет и бронь</h3>
+          <p>Рейсы, допуслуги, актуализация цены, туристы, статусы ТО.</p>
+        </article>
+        <article>
+          <h3>Кабинет менеджера</h3>
+          <p>Заявки, подтверждение, документы, избранное, сравнение.</p>
+        </article>
+        <article>
+          <h3>Компредложение</h3>
+          <p>Скачивание КП под клиента прямо из карточки тура.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="contact" class="contact">
+      <div class="contact-shell">
+        <div class="contact-copy">
+          <p class="kicker light">Следующий шаг</p>
+          <h2>Связаться с менеджером</h2>
+          <p>
+            Обсудим ваш контур: САМО-Тур / турагент, Andromeda API,
+            сроки внедрения и доступ к тестовым ключам.
+          </p>
+          <ul class="contact-points">
+            <li>Видео-разбор демо</li>
+            <li>Оценка интеграции под вашу базу</li>
+            <li>Договор и старт работ</li>
+          </ul>
+        </div>
+        <form class="contact-form" id="contactForm">
+          <label>Имя
+            <input name="name" required placeholder="Артур" />
+          </label>
+          <label>Компания
+            <input name="company" placeholder="Турагентство / оператор" />
+          </label>
+          <label>Telegram или телефон
+            <input name="contact" required placeholder="@username или +7…" />
+          </label>
+          <label>Что нужно
+            <select name="need">
+              <option>Сайт с поиском туров</option>
+              <option>Интеграция Andromeda</option>
+              <option>B2B-кабинет менеджера</option>
+              <option>Аудит текущего САМО-контура</option>
+            </select>
+          </label>
+          <label>Комментарий
+            <textarea name="message" rows="3" placeholder="Кратко о задаче"></textarea>
+          </label>
+          <button type="submit" class="btn primary wide">Отправить заявку менеджеру</button>
+          <p class="form-note" id="contactNote">Ответ обычно в течение рабочего дня.</p>
+        </form>
+      </div>
     </section>
   </main>
 
   <footer class="foot">
-    <span>Север · поиск туров</span>
+    <div class="foot-brand">
+      <img src="./favicon.svg" width="20" height="20" alt="" />
+      <span>Север · поиск туров</span>
+    </div>
     <span>демо-данные · без боевого API</span>
   </footer>
 
