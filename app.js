@@ -87,15 +87,6 @@ const QUICK = [
   { label: "Белек", from: 1, to: 15, hotelHint: "Белек" },
 ];
 
-const PALETTE = [
-  ["#1c4b5c", "#3d7a8c"],
-  ["#8b3a2f", "#c47a4a"],
-  ["#2a5f4a", "#6aa88a"],
-  ["#3d3a66", "#7a74b0"],
-  ["#6b4c2a", "#c4a06a"],
-  ["#1f3d5c", "#5a8fb5"],
-];
-
 const state = {
   params: null,
   results: [],
@@ -146,33 +137,6 @@ function norm(s) {
     .toLowerCase()
     .replace(/ё/g, "е")
     .trim();
-}
-
-function hash(str) {
-  let h = 0;
-  for (let i = 0; i < str.length; i++) h = (h * 31 + str.charCodeAt(i)) >>> 0;
-  return h;
-}
-
-function cover(hotel, resort) {
-  const [a, b] = PALETTE[hash(hotel) % PALETTE.length];
-  const initials = hotel
-    .split(/\s+/)
-    .slice(0, 2)
-    .map((w) => w[0])
-    .join("")
-    .toUpperCase();
-  const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='480' height='360' viewBox='0 0 480 360'>
-    <defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'>
-      <stop stop-color='${a}'/><stop offset='1' stop-color='${b}'/>
-    </linearGradient></defs>
-    <rect width='480' height='360' fill='url(#g)'/>
-    <circle cx='390' cy='70' r='54' fill='rgba(255,255,255,.12)'/>
-    <circle cx='60' cy='300' r='80' fill='rgba(0,0,0,.12)'/>
-    <text x='32' y='58' fill='rgba(255,255,255,.85)' font-family='Arial,sans-serif' font-size='18' font-weight='700'>${resort}</text>
-    <text x='32' y='300' fill='rgba(255,255,255,.95)' font-family='Arial,sans-serif' font-size='64' font-weight='700'>${initials}</text>
-  </svg>`;
-  return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
 }
 
 function setDefaultDate() {
@@ -244,7 +208,6 @@ function mockSearch(params) {
         resort: h.resort,
         beach: h.beach,
         rating: h.rating,
-        cover: cover(h.name, h.resort),
         country: dest.name,
         from: town.name,
         fromCode: town.code,
@@ -455,15 +418,12 @@ function cardHtml(t, idx) {
   const priceNote = state.perPerson ? "с человека" : "за номер";
   return `
     <article class="offer" style="animation-delay:${idx * 0.03}s">
-      <div class="offer-media">
-        <img src="${t.cover}" alt="" />
-        <button type="button" class="fav ${fav ? "is-on" : ""}" data-fav="${t.id}" aria-label="В избранное">${fav ? "★" : "☆"}</button>
-        <span class="rating">${t.rating.toFixed(1)}</span>
-      </div>
       <div class="offer-body">
         <div class="offer-title">
+          <button type="button" class="fav-inline ${fav ? "is-on" : ""}" data-fav="${t.id}" aria-label="В избранное">${fav ? "★" : "☆"}</button>
           <h3>${t.hotel}</h3>
           <span class="stars">${"★".repeat(t.stars)}</span>
+          <span class="rating-inline">${t.rating.toFixed(1)}</span>
         </div>
         <div class="offer-line">
           <span>${t.resort}</span>
@@ -599,14 +559,13 @@ function renderCompare() {
   const tours = state.compare.map((id) => state.results.find((t) => t.id === id)).filter(Boolean);
   showView("compare");
   const box = document.getElementById("view-compare");
-  box.innerHTML = `
+    box.innerHTML = `
     <button type="button" class="back" id="cmpBack">← к результатам</button>
     <div class="cmp-grid" style="--cols:${tours.length}">
       ${tours
         .map(
           (t) => `
         <article class="cmp-card">
-          <img src="${t.cover}" alt="" />
           <h3>${t.hotel}</h3>
           <ul>
             <li><span>Курорт</span><b>${t.resort}</b></li>
@@ -647,16 +606,12 @@ function renderDetail() {
     <button type="button" class="back" id="backSearch">← к результатам</button>
     ${changed ? `<div class="alert">Цена изменилась: было ${rub(state.quotedPrice)}, стало ${rub(t.price)}</div>` : ""}
     <div class="detail">
-      <div class="detail-hero-wrap">
-        <img class="detail-hero" src="${t.cover}" alt="" />
-        <span class="rating big">${t.rating.toFixed(1)}</span>
-      </div>
-      <div class="detail-body">
+      <div class="detail-body detail-body-solo">
         <div class="detail-top">
           <div>
             <p class="chip">${t.operator}</p>
             <h2>${t.hotel}</h2>
-            <p class="muted">${t.resort}, ${t.country} · ${"★".repeat(t.stars)} · ${t.room} · ${t.beach}</p>
+            <p class="muted">${t.resort}, ${t.country} · ${"★".repeat(t.stars)} · рейтинг ${t.rating.toFixed(1)} · ${t.room} · ${t.beach}</p>
           </div>
           <div class="detail-price">
             <b>${rub(price)}</b>
