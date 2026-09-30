@@ -31,29 +31,78 @@
     <section class="hero">
       <div class="hero-glow" aria-hidden="true"></div>
       <div class="hero-copy">
-        <p class="kicker">Andromeda API · САМО-Тур</p>
-        <h1>Север<span>.</span></h1>
-        <p class="hero-lead">
+        <p class="kicker reveal">Andromeda API · САМО-Тур</p>
+        <h1 class="reveal d1">Север<span>.</span></h1>
+        <p class="hero-lead reveal d2">
           Онлайн-поиск туров с живой логикой интеграции:
           справочники, нетто/брутто, бронь и статусы заявок.
         </p>
-        <div class="hero-actions">
+        <div class="hero-actions reveal d3">
           <a class="btn primary" href="#product">Открыть демо</a>
           <a class="btn soft" href="#contact">Связаться с менеджером</a>
         </div>
       </div>
-      <div class="hero-panel" aria-hidden="true">
-        <div class="float-card c1">
-          <small>Поиск</small>
-          <strong>GET_PRICE_FOR_AGENT</strong>
+      <div class="hero-stage">
+        <div class="stage-grid" aria-hidden="true"></div>
+        <div class="stage-hint">тяни плашки · двойной клик — переворот</div>
+        <div class="stage-tools">
+          <button type="button" class="stage-btn" id="cardsStack">Сложить</button>
+          <button type="button" class="stage-btn" id="cardsScatter">Разбросить</button>
+          <button type="button" class="stage-btn" id="cardsReset">Сброс</button>
         </div>
-        <div class="float-card c2">
-          <small>Комиссия</small>
-          <strong>8% · нетто</strong>
-        </div>
-        <div class="float-card c3">
-          <small>Заявка</small>
-          <strong>SV-482193</strong>
+        <div class="hero-panel" id="heroPanel">
+          <article class="float-card" data-card="0" style="--x:12%; --y:14%; --r:-4deg">
+            <div class="card-inner">
+              <div class="face front">
+                <small>Поиск</small>
+                <strong>GET_PRICE_FOR_AGENT</strong>
+              </div>
+              <div class="face back">
+                <small>Метод</small>
+                <strong>Живые цены ТО</strong>
+                <p>STATEINC · TOWNFROMINC</p>
+              </div>
+            </div>
+          </article>
+          <article class="float-card" data-card="1" style="--x:48%; --y:28%; --r:3deg">
+            <div class="card-inner">
+              <div class="face front">
+                <small>Комиссия</small>
+                <strong>8% · нетто</strong>
+              </div>
+              <div class="face back">
+                <small>B2B</small>
+                <strong>Маржа агента</strong>
+                <p>брутто − нетто</p>
+              </div>
+            </div>
+          </article>
+          <article class="float-card" data-card="2" style="--x:22%; --y:58%; --r:5deg">
+            <div class="card-inner">
+              <div class="face front">
+                <small>Заявка</small>
+                <strong>SV-482193</strong>
+              </div>
+              <div class="face back">
+                <small>Статус</small>
+                <strong>confirmed</strong>
+                <p>в базе туроператора</p>
+              </div>
+            </div>
+          </article>
+          <article class="float-card" data-card="3" style="--x:58%; --y:62%; --r:-2deg">
+            <div class="card-inner">
+              <div class="face front">
+                <small>Прокси</small>
+                <strong>sign · normalize</strong>
+              </div>
+              <div class="face back">
+                <small>Слой</small>
+                <strong>Node API</strong>
+                <p>ключи не на фронте</p>
+              </div>
+            </div>
+          </article>
         </div>
       </div>
     </section>
@@ -64,17 +113,17 @@
         <h2>Один контур — три роли</h2>
       </div>
       <div class="seg-grid">
-        <article class="seg-card tone-sea">
+        <article class="seg-card">
           <span class="seg-num">01</span>
           <h3>B2C-витрина</h3>
           <p>Турист ищет тур, сравнивает пакеты, выбирает рейс и оставляет бронь.</p>
         </article>
-        <article class="seg-card tone-sun">
+        <article class="seg-card accent">
           <span class="seg-num">02</span>
           <h3>B2B-кабинет</h3>
           <p>Менеджер видит нетто, комиссию, статусы заявок и пакет документов.</p>
         </article>
-        <article class="seg-card tone-mint">
+        <article class="seg-card">
           <span class="seg-num">03</span>
           <h3>Интеграция</h3>
           <p>Прокси подписывает Andromeda, нормализует ответы ТО в единый UI.</p>
@@ -300,5 +349,6 @@
   </footer>
 
   <script src="app.js"></script>
+  <script src="hero.js"></script>
 </body>
 </html>
